@@ -1,0 +1,527 @@
+Description: Add libva based codec support
+ - Skip invalid video frame in qpaintervideosurface.cpp
+ - Add libva related configuration in plugin/multimedia/gstreamer/gstreamer.pro
+ - Update 'caps' property with 'video/x-va' support for decodebin2
+ - Update gstvideobuffer for handler type support -- we needn't use gstbuffer
+   but the handler only
+ - Work around an issue in gstvideoconnect: when decoder support more than one
+   caps, it may fail
+ - Add libva based codec support in qvideosurfacegstsink
+   - add caps for 'video/x-va'
+   - create X Pixmap in Gst thread, and creat QPixmap (from this Pixmap) in Qt thread
+   - vaPutSurface to X Pixmap runs in Gst thread, do not pass GstVaBuffer to Qt thread
+   - pass *QPixmap from Gst thread to Qt thread instead of QPixmap
+Author: Halley Zhao <halley.zhao at intel.com>
+Bug: FEA#11208, FEA#12387
+--- a/configure
++++ b/configure
+@@ -104,6 +104,7 @@ LIB_PATH="lib"
+ BIN_PATH="bin"
+ PLUGIN_PATH="plugins"
+ PLATFORM_CONFIG=
++ENABLE_LIBVA=
+ MAC_SDK=
+ MOBILITY_MODULES="bearer location contacts multimedia publishsubscribe versit messaging systeminfo serviceframework sensors gallery organizer feedback connectivity"
+ MOBILITY_MODULES_UNPARSED=
+@@ -120,7 +121,7 @@ usage()
+     echo "Usage: configure [-prefix <dir>] [headerdir <dir>] [libdir <dir>]"
+     echo "                 [-bindir <dir>] [-tests] [-examples] [-no-docs]"
+     echo "                 [-no-tools] [-debug] [-release] [-silent]"
+-    echo "                 [-modules <list>]"
++    echo "                 [-modules <list>] [-enable-libva]"
+     echo
+     echo "Options:"
+     echo
+@@ -163,6 +164,7 @@ usage()
+     echo "-languages ........ Languages/translations to be installed (e.g.: \"ar de ko\")."
+     echo "                    (default is empty)"
+     echo "-qmake-exec <name>  Sets custom binary name for qmake binary"
++    echo "-enable-libva...... Enable libva based hw codec support for multimedia" 
+     echo "                    (default: qmake)"
+     echo "-no-nfc-symbian     Disables the NFC Sybmian backend."
+ #    echo "-test-sim           Use simulator backend for testing systeminfo"
+@@ -258,6 +260,9 @@ while [ "$#" -gt 0 ]; do
+             QMAKE_EXEC="$2"
+             shift
+             ;;
++        -enable-libva)
++            ENABLE_LIBVA=yes
++            ;;
+         -modules)
+             MOBILITY_MODULES_UNPARSED=$2
+             ORGANIZER_REQUESTED=
+@@ -474,6 +479,12 @@ if [ -n "$MAC_SDK" ]; then
+    echo "QMAKE_MAC_SDK = $QMAKE_MAC_SDK" >> "$CONFIG_IN"
+ fi
+ 
++if [ -z "$ENABLE_LIBVA" ]; then
++    echo "libva is not enabled"
++else
++    echo "CONFIG += libva"  >> "$CONFIG_IN"
++fi
++
+ if [ -z "$BUILD_UNITTESTS" ]; then
+     echo "build_unit_tests = no" >> "$CONFIG_IN"
+ else
+--- a/plugins/multimedia/gstreamer/gstreamer.pro
++++ b/plugins/multimedia/gstreamer/gstreamer.pro
+@@ -56,6 +56,12 @@ meego {
+   PKGCONFIG +=gstreamer-plugins-bad-free-0.10
+ }
+ 
++libva {
++    PKGCONFIG += libva-x11 \
++                 gst-vabuffer
++    DEFINES += QMEDIA_GSTREAMER_VABUFFER
++    DEFINES += QMEDIA_GSTREAMER_CAMERA_MOORESTOWN_SUPPORT
++}
+ # Input
+ HEADERS += \
+     qgstreamermessage.h \
+--- a/plugins/multimedia/gstreamer/gstvideoconnector.c
++++ b/plugins/multimedia/gstreamer/gstvideoconnector.c
+@@ -58,13 +58,29 @@ static GstStaticPadTemplate gst_video_co
+ GST_STATIC_PAD_TEMPLATE ("sink",
+                          GST_PAD_SINK,
+                          GST_PAD_ALWAYS,
+-                         GST_STATIC_CAPS_ANY);
++//                         GST_STATIC_CAPS_ANY);
++                         GST_STATIC_CAPS(
++                         "video/x-raw-rgb; "
++                         "video/x-raw-yuv "
++#ifdef QMEDIA_GSTREAMER_VABUFFER
++                         "; "
++                         "video/x-va "
++#endif                    
++                        ));
+ 
+ static GstStaticPadTemplate gst_video_connector_src_factory =
+ GST_STATIC_PAD_TEMPLATE ("src",
+                          GST_PAD_SRC,
+                          GST_PAD_ALWAYS,
+-                         GST_STATIC_CAPS_ANY);
++//                          GST_STATIC_CAPS_ANY);
++                         GST_STATIC_CAPS(
++                         "video/x-raw-rgb; "
++                         "video/x-raw-yuv "
++#ifdef QMEDIA_GSTREAMER_VABUFFER
++                         "; "
++                         "video/x-va "
++#endif                    
++                        ));
+ 
+ #define _do_init(bla) \
+     GST_DEBUG_CATEGORY_INIT (video_connector_debug, \
+--- a/plugins/multimedia/gstreamer/mediaplayer/qgstreamerplayersession.cpp
++++ b/plugins/multimedia/gstreamer/mediaplayer/qgstreamerplayersession.cpp
+@@ -59,10 +59,35 @@
+ #if defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6) || (GST_VERSION_MICRO > 20)
+ #define USE_PLAYBIN2
+ #endif
++#define USE_PLAYBIN2
++void element_added(GstBin *bin, GstElement *element, gpointer user_data);
++#define DEFAULT_RAW_CAPS \
++    "video/x-raw-yuv; " \
++    "video/x-raw-rgb; " \
++    "video/x-raw-gray; " \
++    "video/x-va; " \
++    "audio/x-raw-int; " \
++    "audio/x-raw-float; " \
++    "text/plain; " \
++    "text/x-pango-markup; " \
++    "video/x-dvd-subpicture; " \
++    "subpicture/x-pgs"
++static GstStaticCaps default_raw_caps = GST_STATIC_CAPS (DEFAULT_RAW_CAPS);
+ 
+ //#define DEBUG_PLAYBIN
+ //#define DEBUG_VO_BIN_DUMP
+ 
++void element_added(GstBin *bin, GstElement *element, gpointer user_data)
++{
++    const char *element_name = NULL;
++    element_name = gst_element_get_name(element);
++    qDebug() << " element name: " << element_name;
++    if(!strncmp(element_name, "uridecodebin", 12)) {
++        qDebug() << "uridecodebin added";
++        g_object_set(G_OBJECT(element), "caps", gst_static_caps_get(&default_raw_caps), NULL);
++    }
++}
++
+ typedef enum {
+     GST_PLAY_FLAG_VIDEO         = 0x00000001,
+     GST_PLAY_FLAG_AUDIO         = 0x00000002,
+@@ -154,6 +179,7 @@ QGstreamerPlayerSession::QGstreamerPlaye
+         connect(m_busHelper, SIGNAL(message(QGstreamerMessage)), SLOT(busMessage(QGstreamerMessage)));
+         m_busHelper->installSyncEventFilter(this);
+ 
++        g_signal_connect(m_playbin, "element-added", G_CALLBACK(element_added), m_playbin);
+         g_object_set(G_OBJECT(m_playbin), "video-sink", m_videoOutputBin, NULL);
+ 
+         g_signal_connect(G_OBJECT(m_playbin), "notify::source", G_CALLBACK(playbinNotifySource), this);
+--- a/plugins/multimedia/gstreamer/qgstvideobuffer.cpp
++++ b/plugins/multimedia/gstreamer/qgstvideobuffer.cpp
+@@ -59,13 +59,18 @@ QGstVideoBuffer::QGstVideoBuffer(GstBuff
+     , m_bytesPerLine(bytesPerLine)
+     , m_mode(NotMapped)
+     , m_handle(handle)
++    , m_handleType(handleType)
+ {
+-    gst_buffer_ref(m_buffer);
++    if(QAbstractVideoBuffer::QPixmapHandle != m_handleType) {
++        gst_buffer_ref(m_buffer);
++    }
+ }
+ 
+ QGstVideoBuffer::~QGstVideoBuffer()
+ {
+-    gst_buffer_unref(m_buffer);
++    if(QAbstractVideoBuffer::QPixmapHandle != m_handleType) {
++        gst_buffer_unref(m_buffer);
++    }
+ }
+ 
+ 
+@@ -76,6 +81,9 @@ QAbstractVideoBuffer::MapMode QGstVideoB
+ 
+ uchar *QGstVideoBuffer::map(MapMode mode, int *numBytes, int *bytesPerLine)
+ {
++    if(QAbstractVideoBuffer::QPixmapHandle == m_handleType) {
++        return NULL;
++    }
+     if (mode != NotMapped && m_mode == NotMapped) {
+         if (numBytes)
+             *numBytes = m_buffer->size;
+--- a/plugins/multimedia/gstreamer/qgstvideobuffer.h
++++ b/plugins/multimedia/gstreamer/qgstvideobuffer.h
+@@ -66,6 +66,7 @@ private:
+     int m_bytesPerLine;
+     MapMode m_mode;
+     QVariant m_handle;
++    QAbstractVideoBuffer::HandleType m_handleType;
+ };
+ 
+ 
+--- a/plugins/multimedia/gstreamer/qvideosurfacegstsink.cpp
++++ b/plugins/multimedia/gstreamer/qvideosurfacegstsink.cpp
+@@ -55,6 +55,14 @@
+ 
+ #include "qvideosurfacegstsink.h"
+ 
++#ifdef QMEDIA_GSTREAMER_VABUFFER
++#include <va/va_x11.h>
++#include <gstvabuffer.h>
++// todo, it's better to be a static member of class.
++// but include Xlib related file in qvideosurfacegstsink.h will cause some compile issue.
++static Display *_x_display;
++#endif
++
+ //#define DEBUG_VIDEO_SURFACE_SINK
+ 
+ 
+@@ -70,6 +78,31 @@ QVideoSurfaceGstDelegate::QVideoSurfaceG
+         m_supportedXVideoPixelFormats = m_surface->supportedPixelFormats(QAbstractVideoBuffer::XvShmImageHandle);
+         connect(m_surface, SIGNAL(supportedFormatsChanged()), this, SLOT(supportedFormatsChanged()));
+     }
++    
++#ifdef QMEDIA_GSTREAMER_VABUFFER
++    m_nativePixmap = 0;	
++    m_isPixmapVideo = 0;
++    m_videoWidth = 0;
++    m_videoHeight = 0;
++#endif
++}
++
++QVideoSurfaceGstDelegate::~QVideoSurfaceGstDelegate()
++{
++#ifdef QMEDIA_GSTREAMER_VABUFFER
++    // since m_nativePixmap is created in Gst thread, we need release in Gst thread as well.
++    // if(m_isPixmapVideo && m_nativePixmap) {
++    if(m_nativePixmap) {
++        qDebug() << "Freee X Pixmap";
++        XFreePixmap(_x_display, m_nativePixmap);
++        m_nativePixmap = 0;
++        m_videoWidth = 0;
++        m_videoHeight = 0;
++        m_isPixmapVideo = 0;
++        // deleta m_QPixmap?
++    }
++#endif
++
+ }
+ 
+ QList<QVideoFrame::PixelFormat> QVideoSurfaceGstDelegate::supportedPixelFormats(QAbstractVideoBuffer::HandleType handleType) const
+@@ -102,6 +135,38 @@ bool QVideoSurfaceGstDelegate::start(con
+     m_format = format;
+     m_bytesPerLine = bytesPerLine;
+ 
++#ifdef QMEDIA_GSTREAMER_VABUFFER
++    m_videoWidth = format.frameSize().width();
++    m_videoHeight = format.frameSize().height();
++
++    if (QAbstractVideoBuffer::QPixmapHandle == format.handleType()) {
++        // create X Pixmap 
++        m_isPixmapVideo = true;
++        if(!m_nativePixmap) {
++            WId _x_rootWindow;
++            int _x_depth;
++            //todo, should we use the display from Qt thread or open display here?
++            qDebug() << "create X Pixmap";
++            if (!_x_display) {
++                _x_display = XOpenDisplay(NULL);
++            }
++            if (!_x_display) {
++                qDebug() << "fail to open display";
++                return false; 
++            }
++            _x_rootWindow = DefaultRootWindow(_x_display);
++            _x_depth = DefaultDepth(_x_display, DefaultScreen(_x_display));
++            m_nativePixmap = XCreatePixmap(_x_display, _x_rootWindow, m_videoWidth, m_videoHeight, _x_depth);
++            // x11 pixmap is created async, we use XSync() to make sure it is created.
++            XSync(_x_display, 0);
++        }   
++        qDebug() << "m_nativePixmap: " << m_nativePixmap;
++   } 
++   else {
++        m_isPixmapVideo = false;
++    }
++#endif    
++
+     if (QThread::currentThread() == thread()) {
+         m_started = !m_surface.isNull() ? m_surface->start(m_format) : false;
+     } else {
+@@ -121,6 +186,19 @@ void QVideoSurfaceGstDelegate::stop()
+         return;
+ 
+     QMutexLocker locker(&m_mutex);
++#ifdef QMEDIA_GSTREAMER_VABUFFER
++    // since m_nativePixmap is created in Gst thread, we need release in Gst thread as well.
++    // if(m_isPixmapVideo && m_nativePixmap) {
++    if(m_nativePixmap) {
++        qDebug() << "Freee X Pixmap";
++        XFreePixmap(_x_display, m_nativePixmap);
++        m_nativePixmap = 0;
++        m_videoWidth = 0;
++        m_videoHeight = 0;
++        m_isPixmapVideo = 0;
++        // deleta m_QPixmap?
++    }
++#endif
+ 
+     if (QThread::currentThread() == thread()) {
+         if (!m_surface.isNull())
+@@ -151,7 +229,39 @@ GstFlowReturn QVideoSurfaceGstDelegate::
+     QMutexLocker locker(&m_mutex);
+ 
+     QGstVideoBuffer *videoBuffer = 0;
++#ifdef QMEDIA_GSTREAMER_VABUFFER
++    if (GST_IS_VA_BUFFER(buffer)) { // m_isPixmapVideo
++        VAStatus status; 
++
++        GstVABuffer *vabuffer = GST_VA_BUFFER(buffer);
++        status = vaPutSurface(vabuffer->dpy, vabuffer->surface, m_nativePixmap, 
++                          0, 0, m_videoWidth, m_videoHeight, 
++                          0, 0, m_videoWidth, m_videoHeight, 
++                          NULL, 0, vabuffer->flags);
++        switch (status) {
++        case VA_STATUS_SUCCESS:
++                 // qDebug() << "output of the surface successfull";
++                 break;
++        case VA_STATUS_ERROR_INVALID_DISPLAY:
++                 qDebug() << "invalid display for outputting the surface";
++                 break;
++        default:
++                 qDebug() << "problems putting the va surface " << (int) status;
++                 break;
++        }
++        // when I try to use QPixmap type, just got '0' for handle (X Pixmap ID) in paint function.
++        // it is not ok to use QPixmap out of Qt Thread, so I have to try to use QPixmap* instead. 
++        QPixmap *p_QPixmap = &m_QPixmap;
++#if 0
++        QVariant variant = m_QPixmap;
++        videoBuffer = new QGstVideoBuffer(NULL, m_bytesPerLine, QAbstractVideoBuffer::QPixmapHandle, variant);
++#else 
++        QVariant variant = qVariantFromValue((void*) p_QPixmap);
++        videoBuffer = new QGstVideoBuffer(NULL, m_bytesPerLine, QAbstractVideoBuffer::QPixmapHandle, variant);
++#endif
+ 
++   } else
++#endif    
+ #if defined(Q_WS_X11) && !defined(QT_NO_XVIDEO)
+     if (G_TYPE_CHECK_INSTANCE_TYPE(buffer, QGstXvImageBuffer::get_type())) {
+         QGstXvImageBuffer *xvBuffer = reinterpret_cast<QGstXvImageBuffer *>(buffer);
+@@ -159,8 +269,9 @@ GstFlowReturn QVideoSurfaceGstDelegate::
+         videoBuffer = new QGstVideoBuffer(buffer, m_bytesPerLine, QAbstractVideoBuffer::XvShmImageHandle, handle);
+     } else
+ #endif
++    {
+         videoBuffer = new QGstVideoBuffer(buffer, m_bytesPerLine);
+-
++    }
+     m_frame = QVideoFrame(
+             videoBuffer,
+             m_format.frameSize(),
+@@ -192,6 +303,13 @@ void QVideoSurfaceGstDelegate::queuedSta
+ {
+     QMutexLocker locker(&m_mutex);
+ 
++#ifdef QMEDIA_GSTREAMER_VABUFFER
++    if(m_isPixmapVideo) {
++        m_QPixmap = QPixmap::fromX11Pixmap(m_nativePixmap, QPixmap::ExplicitlyShared);
++        qDebug() << "QPixmap ptr: " << (void *) &m_QPixmap << __FILE__;
++    }
++#endif
++
+     m_started = m_surface->start(m_format);
+ 
+     m_setupCondition.wakeAll();
+@@ -406,7 +524,15 @@ void QVideoSurfaceGstSink::base_init(gpo
+                     "video/x-raw-yuv, "
+                     "framerate = (fraction) [ 0, MAX ], "
+                     "width = (int) [ 1, MAX ], "
+-                    "height = (int) [ 1, MAX ]"));
++                    "height = (int) [ 1, MAX ]"
++#ifdef QMEDIA_GSTREAMER_VABUFFER
++                    "; "
++                    "video/x-va, "
++                    "framerate = (fraction) [ 0, MAX ], "
++                    "width = (int) [ 1, MAX ], "
++                    "height = (int) [ 1, MAX ]"
++#endif                    
++                    ));
+ 
+     gst_element_class_add_pad_template(
+             GST_ELEMENT_CLASS(g_class), gst_static_pad_template_get(&sink_pad_template));
+@@ -501,7 +627,16 @@ GstCaps *QVideoSurfaceGstSink::get_caps(
+             }
+         }
+     }
+-
++#ifdef QMEDIA_GSTREAMER_VABUFFER
++    GstStructure *structure = gst_structure_new(
++                   "video/x-va",
++                   "framerate" , GST_TYPE_FRACTION_RANGE, 0, 1, INT_MAX, 1,
++                   "width"     , GST_TYPE_INT_RANGE, 1, INT_MAX,
++                   "height"    , GST_TYPE_INT_RANGE, 1, INT_MAX,
++                   NULL);
++    gst_caps_append_structure(caps, structure);
++#endif
++                   
+     return caps;
+ }
+ 
+@@ -592,9 +727,18 @@ QVideoSurfaceFormat QVideoSurfaceGstSink
+         if (index != -1)
+             pixelFormat = qt_rgbColorLookup[index].pixelFormat;
+     }
++#ifdef QMEDIA_GSTREAMER_VABUFFER
++    else if (qstrcmp(gst_structure_get_name(structure), "video/x-va") == 0) {
++        pixelFormat = QVideoFrame::Format_User;
++    }
++#endif    
+ 
+     if (pixelFormat != QVideoFrame::Format_Invalid) {
+-        QVideoSurfaceFormat format(size, pixelFormat);
++        QAbstractVideoBuffer::HandleType handleType = QAbstractVideoBuffer::NoHandle;
++        if(QVideoFrame::Format_User == pixelFormat) {
++            handleType = QAbstractVideoBuffer::QPixmapHandle;
++        }
++        QVideoSurfaceFormat format(size, pixelFormat, handleType);
+ 
+         QPair<int, int> rate;
+         gst_structure_get_fraction(structure, "framerate", &rate.first, &rate.second);
+--- a/plugins/multimedia/gstreamer/qvideosurfacegstsink.h
++++ b/plugins/multimedia/gstreamer/qvideosurfacegstsink.h
+@@ -52,6 +52,10 @@
+ #include <qvideosurfaceformat.h>
+ #include <qvideoframe.h>
+ #include <qabstractvideobuffer.h>
++#ifdef QMEDIA_GSTREAMER_VABUFFER
++  #include <QPixmap>
++#endif
++
+ 
+ QT_BEGIN_NAMESPACE
+ class QAbstractVideoSurface;
+@@ -67,7 +71,7 @@ class QVideoSurfaceGstDelegate : public
+     Q_OBJECT
+ public:
+     QVideoSurfaceGstDelegate(QAbstractVideoSurface *surface);
+-
++    ~QVideoSurfaceGstDelegate();
+     QList<QVideoFrame::PixelFormat> supportedPixelFormats(
+             QAbstractVideoBuffer::HandleType handleType = QAbstractVideoBuffer::NoHandle) const;
+ 
+@@ -99,6 +103,15 @@ private:
+     GstFlowReturn m_renderReturn;
+     int m_bytesPerLine;
+     bool m_started;
++
++#ifdef QMEDIA_GSTREAMER_VABUFFER
++    QPixmap m_QPixmap;
++    WId  m_nativePixmap;
++    int m_videoWidth;
++    int m_videoHeight;
++    bool m_isPixmapVideo;
++#endif
++    
+ };
+ 
+ class QVideoSurfaceGstSink
+--- a/src/multimedia/qpaintervideosurface.cpp
++++ b/src/multimedia/qpaintervideosurface.cpp
+@@ -166,6 +166,10 @@ QAbstractVideoSurface::Error QVideoSurfa
+ QAbstractVideoSurface::Error QVideoSurfaceGenericPainter::paint(
+             const QRectF &target, QPainter *painter, const QRectF &source)
+ {
++    if(!(m_frame.isValid())) {
++        return QAbstractVideoSurface::NoError; 
++    }
++
+     if (m_frame.handleType() == QAbstractVideoBuffer::QPixmapHandle) {
+         painter->drawPixmap(target, m_frame.handle().value<QPixmap>(), source);
+     } else if (m_frame.map(QAbstractVideoBuffer::ReadOnly)) {
+@@ -375,8 +379,21 @@ QAbstractVideoSurface::Error QVideoSurfa
+ QAbstractVideoSurface::Error QVideoSurfaceGLPainter::paint(
+         const QRectF &target, QPainter *painter, const QRectF &source)
+ {
++    if(!(m_frame.isValid())) {
++        return QAbstractVideoSurface::NoError; 
++    }
++
+     if (m_frame.handleType() == QAbstractVideoBuffer::QPixmapHandle) {
+-        painter->drawPixmap(target, m_frame.handle().value<QPixmap>(), source);
++#if 0
++        // when we try to pass QPixmap from Media(gst) thread, we got invalid handle() and size().
++        // it seems it is not ok to pass QPixmap from non-Qt thread.
++        QPixmap _QPixmap = m_frame.handle().value<QPixmap>();
++        painter->drawPixmap(target, _QPixmap, source);
++#else
++        QPixmap* p_QPixmap = (QPixmap*) ( m_frame.handle().value<void *>());
++        painter->drawPixmap(target, *p_QPixmap, source);
++        // painter->drawPixmap(target, m_frame.handle().value<QPixmap>(), source);
++#endif
+     } else if (m_frame.isValid()) {
+         return QAbstractVideoSurface::IncorrectFormatError;
+     } else {
+@@ -812,6 +829,10 @@ void QVideoSurfaceArbFpPainter::stop()
+ QAbstractVideoSurface::Error QVideoSurfaceArbFpPainter::paint(
+         const QRectF &target, QPainter *painter, const QRectF &source)
+ {
++    if(!(m_frame.isValid())) {
++        return QAbstractVideoSurface::NoError; 
++    }
++ 
+     const QAbstractVideoBuffer::HandleType h = m_frame.handleType();
+     if (h == QAbstractVideoBuffer::NoHandle || h == QAbstractVideoBuffer::GLTextureHandle) {
+         bool stencilTestEnabled = glIsEnabled(GL_STENCIL_TEST);
+@@ -1158,6 +1179,10 @@ void QVideoSurfaceGlslPainter::stop()
+ QAbstractVideoSurface::Error QVideoSurfaceGlslPainter::paint(
+         const QRectF &target, QPainter *painter, const QRectF &source)
+ {
++    if(!(m_frame.isValid())) {
++        return QAbstractVideoSurface::NoError; 
++    }
++
+     const QAbstractVideoBuffer::HandleType h = m_frame.handleType();
+     if (h == QAbstractVideoBuffer::NoHandle || h == QAbstractVideoBuffer::GLTextureHandle) {
+         bool stencilTestEnabled = glIsEnabled(GL_STENCIL_TEST);

@@ -1,0 +1,42 @@
+Description: Revert commit 0fd9fc9 - It breaks 3rd party applications build
+Bug: BMC#13087
+
+commit 0fd9fc92747af0cbc26a12cdf0d4fc85b22753dc
+Author: Chris Adams <christopher.adams@nokia.com>
+Date:   Tue Nov 23 10:59:49 2010 +1000
+
+    Add convenience function to QContactUrl
+    
+    Previously, the setUrl function took a QString parameter.  This commit
+    adds a convenience function which takes a QUrl parameter, and
+    internally calls toString() on the given url parameter before storing
+    it.
+    
+    Task-number: QTMOBILITY-614
+    Reviewed-by: Kevin Wu Won
+
+--- a/src/contacts/details/qcontactdetails.cpp
++++ b/src/contacts/details/qcontactdetails.cpp
+@@ -822,12 +822,6 @@ Q_DEFINE_LATIN1_CONSTANT(QContactUrl::Su
+  */
+ 
+ /*!
+-   \fn QContactUrl::setUrl(const QUrl& url)
+-   Sets the url stored in this detail to the string representation
+-   of the given \a url.
+- */
+-
+-/*!
+    \fn QContactUrl::setSubType(const QString& subType)
+    Sets the subtype which this detail implements to be the given \a subType.
+  */
+--- a/src/contacts/details/qcontacturl.h
++++ b/src/contacts/details/qcontacturl.h
+@@ -72,7 +72,6 @@ public:
+ #endif
+ 
+     void setUrl(const QString& url) {setValue(FieldUrl, url);}
+-    void setUrl(const QUrl& url) {setValue(FieldUrl, url.toString());}
+     QString url() const {return value(FieldUrl);}
+ 
+     void setSubType(const QString& subType) {setValue(FieldSubType, subType);}

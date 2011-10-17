@@ -1,0 +1,55 @@
+From 2c10b265bc3a7fc33601db7a52888fe350a16fc3 Mon Sep 17 00:00:00 2001
+From: Christophe Dumez <christophe.dumez@intel.com>
+Date: Mon, 6 Jun 2011 15:06:07 +0300
+Subject: [PATCH] contacts: Use eds as default engine and tracker and fallback
+
+Use EDS as default backend for contacts if present, fallback
+to tracker otherwise.
+---
+ src/contacts/contacts.pro        |    4 +++-
+ src/contacts/qcontactmanager.cpp |    7 +++++++
+ 2 files changed, 10 insertions(+), 1 deletions(-)
+
+diff --git a/src/contacts/contacts.pro b/src/contacts/contacts.pro
+index 72bee8e..7df2fdc 100644
+--- a/src/contacts/contacts.pro
++++ b/src/contacts/contacts.pro
+@@ -91,7 +91,8 @@ maemo5 {
+ }
+ 
+ maemo6|meego {
+-    isEmpty(CONTACTS_DEFAULT_ENGINE): CONTACTS_DEFAULT_ENGINE=tracker
++    isEmpty(CONTACTS_DEFAULT_ENGINE): CONTACTS_DEFAULT_ENGINE=eds
++    isEmpty(CONTACTS_FALLBACK_ENGINE): CONTACTS_FALLBACK_ENGINE=tracker
+ }
+ 
+ 
+@@ -125,6 +126,7 @@ simulator {
+ }
+ 
+ !isEmpty(CONTACTS_DEFAULT_ENGINE): DEFINES += Q_CONTACTS_DEFAULT_ENGINE=$$CONTACTS_DEFAULT_ENGINE
++!isEmpty(CONTACTS_FALLBACK_ENGINE): DEFINES += Q_CONTACTS_FALLBACK_ENGINE=$$CONTACTS_FALLBACK_ENGINE
+ 
+ CONFIG += middleware
+ include(../../features/deploy.pri)
+diff --git a/src/contacts/qcontactmanager.cpp b/src/contacts/qcontactmanager.cpp
+index 2380b22..5243bb7 100644
+--- a/src/contacts/qcontactmanager.cpp
++++ b/src/contacts/qcontactmanager.cpp
+@@ -144,6 +144,13 @@ QStringList QContactManager::availableManagers()
+     QContactManagerData::loadFactories();
+     ret.append(QContactManagerData::m_engines.keys());
+ 
++    // Move the fallback engine to second position
++#if defined(Q_CONTACTS_FALLBACK_ENGINE)
++    if (ret.removeAll(QLatin1String(makename(Q_CONTACTS_FALLBACK_ENGINE)))) {
++        ret.prepend(QLatin1String(makename(Q_CONTACTS_FALLBACK_ENGINE)));
++    }
++#endif
++
+     // now swizzle the default engine to pole position
+ #if defined(Q_CONTACTS_DEFAULT_ENGINE)
+     if (ret.removeAll(QLatin1String(makename(Q_CONTACTS_DEFAULT_ENGINE)))) {
+-- 
+1.7.4.4
+

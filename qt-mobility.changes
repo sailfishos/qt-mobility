@@ -1,0 +1,408 @@
+* Thu Sep 29 2011 Marko Saukko <marko.saukko@cybercom.com> - 1.2.0
+- Cut of some unneeded dependencies.
+- Dropped organizer and messaging modules.
+
+* Wed Sep 21 2011 Robin Burchell <viroteck@viroteck.net> - 1.2.0
+- Fix a crash in ContactModel QML element (add fix_qml_contact_model patch)
+- Fix compilation caused by upgrade of mkcal
+
+* Thu Aug 04 2011 Markus Lehtonen <markus.lehtonen@linux.intel.com> - 1.2.0
+- Fix compilation with Qt4.8 (add sync-declarative-to-qt48-qobject patch and
+  sync-macros-to-qt48 patch)
+
+* Wed Jun 8 2011 Christophe Dumez <christophe.dumez@intel.com> - 1.2.0
+- BMC#18678 Add contacts_use_eds_engine.patch to use evolution-data-server 
+  as default contact backend and tracker as fallback.
+
+* Tue Jun 7 2011 Andy Ross <andy.ross@windriver.com> - 1.2.0
+- BMC #18561 Fix Qt Mobility crash in orientation sensor on devices without
+  accelerometers.
+
+* Fri Jun 3 2011 Christophe Dumez <christophe.dumez@intel.com> - 1.2.0
+- BMC#18542 Add versit_urls_changed_to_uris.patch to replace URL by URI in
+  saved PHOTO/LOGO vCard entry (conforming to RFC-2426).
+- BMC#18543 Add contacts_fix_schema_definitions.patch to add missing fields
+  in QContactOrganization.
+- BMC#18544 Add versit_reverse_geolocation_lat_lon_order.patch to save
+  QContactGeolocation properly (conforming to RFC-2426).
+- BMC#18545 Add versit_add_meego_vcard_entries.patch to add MeeGo-specific
+  vCard properties (required by EDS backends).
+
+* Fri Jun 3 2011 Xiaowei Ye <xiaowei.ye@intel.com> - 1.2.0  
+- BMC#18163 Update Moorestown_Camera_Support.patch for video performance:  
+  add queue into preview and record pipelines to improve performance  
+  use alsasrc because pulsesrc causes performance problems  
+
+* Thu May 26 2011 Xiaowei Ye <xiaowei.ye@intel.com> - 1.2.0 
+- BMC#18163 Update Moorestown_Camera_Support.patch to improve display performance
+  and correct flip settings
+
+* Mon May 23 2011 Joonas Tanskanen <joonas.tanskanen@sasken.com> - 1.2.0
+- meegocamera fixed to not require meego-handset-icon-theme package (BMC#17993)
+
+* Mon May 23 2011 Xiaowei Ye <xiaowei.ye@intel.com> - 1.2.0
+- Update Moorestown_Camera_Support.patch to fix vertical flipping of back camera
+
+* Tue May 10 2011 Sunil Thaha <sunil.thaha@nokia.com> - 1.2.0
+- Update Qt Mobility to 1.2.0
+
+* Mon May 2 2011 Joonas Tanskanen <joonas.tanskanen@sasken.com> - 1.2.0~rc1
+- Update qml_camera_example_added_functionality.patch:
+  Qml camera example and thus meegocamera fixed to save its settings and restore
+  them when the app gets launched again. (BMC#15324)
+  Qml camera app's button pane fixed to be transparent as it was before Qt Mobility
+  1.2.0~rc1 version
+
+* Tue Apr 26 2011 Xiaowei Ye <xiaowei.ye@intel.com> - 1.2.0~rc1
+- Update Moorestown_Camera_Support.patch:
+  add horizontal/vertical flip setting
+  set mp4 as the default video container
+  use pulsesrc instead of alsasrc
+
+* Thu Apr 26 2011 Joonas Tanskanen <joonas.tanskanen@sasken.com> - 1.2.0~rc1
+- Update patches:
+  qml_camera_example_added_functionality.patch - switch fw back to fullscreen
+  camera_api_added_functionality.patch
+  enable_xvoverlay_for_qml_camera.patch
+
+* Fri Apr 25 2011 Halley Zhao <halley.zhao@intel.com> - 1.2.0~rc1
+- Add revert-m_pools-in-qvideosurfacegstsink.patch
+  revert m_pools for video playback in texture mode
+- Update patches:
+  libva-codec-enable.patch
+  Moorestown_Camera_Support.patch
+
+* Thu Apr 21 2011 Sunil Thaha <sunil.thaha@nokia.com> - 1.2.0~rc1
+- Update Qt Mobility to 1.2.0 rc1
+- Update qml_camera_example_added_functionality.patch
+
+* Wed Apr 20 2011 Fathi Boudra <fathi.boudra@nokia.com> - 1.2.0~rc0
+- Update Qt Mobility to 1.2.0 rc0
+- Remove build_with_QT_NO_KEYWORDS_bmc12935.patch - stolen upstream
+
+* Tue Apr 19 2011 Joonas Tanskanen <joonas.tanskanen@sasken.com> - 1.2.0~beta0+git2726
+- Update qml_camera_example_added_functionality.patch (BMC#15325, BMC#15870)
+
+* Mon Apr 18 2011 Xiaowei Ye <xiaowei.ye@intel.com> - 1.2.0~beta0+git2726
+- Update Moorestown_Camera_Support.patch to fix flash mode detection when the
+  camera is not running
+
+* Fri Apr 15 2011 Xiaowei Ye <xiaowei.ye@intel.com> - 1.2.0~beta0+git2726
+- Update Moorestown_Camera_Support.patch to fix flash mode detection for Moorestown
+
+* Thu Apr 14 2011 Xiaowei Ye <xiaowei.ye@intel.com> - 1.2.0~beta0+git2726
+- Update Moorestown_Camera_Support.patch to fix camera detection for Moorestown
+
+* Mon Apr 11 2011 Xiaowei Ye <xiaowei.ye@intel.com> - 1.2.0~beta0+git2726
+- Update Moorestown_Camera_Support.patch to fix camera switching for Moorestown
+
+* Fri Apr 8 2011 Xiaowei Ye <xiaowei.ye@intel.com> - 1.2.0~beta0+git2726
+- Update Moorestown_Camera_Support.patch to fix audio settings for Moorestown
+
+* Fri Apr 1 2011 Xiaowei Ye <xiaowei.ye@intel.com> - 1.2.0~beta0+git2726
+- Update Moorestown_Camera_Support.patch to fix flash mode settings for Moorestown
+
+* Tue Mar 29 2011 Xiaowei Ye <xiaowei.ye@intel.com> - 1.2.0~beta0+git2726
+- Update Moorestown_Camera_Support.patch to support camera settings and new
+  mixvideo encoders on Moorestown platform
+
+* Fri Mar 25 2011 Joonas Tanskanen <joonas.tanskanen@sasken> - 1.2.0~beta0+git2726
+- Fix meegocamera to support shutter/zoom buttons (BMC#14915)
+- Fix incorrect still capture preview image resolution (BMC#14920)
+
+* Thu Mar 01 2011 Joonas Tanskanen <joonas.tanskanen@sasken> - 1.2.0~beta0+git2726
+- Handset Camera UI showcase example upon proposed setup for Camera Subsystem
+  (Comment 17, FEA#2743). The UI is based on qml_camera example from
+  qt-mobility-examples package
+- Add camera_api_added_functionality.patch for setting viewfinder and preview
+  image resolution for Camera UI
+- Add set_qml_camera_example_fullscreen.patch for setting qml_camera example
+  and thus Handset Camera UI to fullscreen
+
+* Tue Feb 22 2011 Sunil Thaha <sunil.thaha@nokia.com> - 1.2.0~beta0+git2726
+- Update to Qt Mobility 1.2.0~beta0+git2726 (git master branch commit 3a2ca22)
+  (BMC#13741)
+- Remove default_subtitle_loading.patch - unused
+- Remove fix_translations_install_path.patch - merged upstream
+- Add PkgConfigBr: libiphb and libmkcal
+- Add Qt Mobility Connectivity QML plugin package
+- Update %files
+
+* Fri Feb 18 2011 Fathi Boudra <fathi.boudra@nokia.com> - 1.2.0~beta0+git922
+- Remove meegotouch-feedback and meegotouchcore build requires to avoid
+  dependency on Handset components like libmeegotouch (BMC#13674)
+
+* Wed Feb 16 2011 Joonas Tanskanen <joonas.tanskanen@sasken.com> - 1.2.0~beta0+git922
+- Add enable_xvoverlay_for_qml_camera.patch to make qml camera's viewfinder
+  work on ARM platform (BMC#13596)
+
+* Sun Jan 31 2011 Xiaowei Ye <xiaowei.ye@intel.com> - 1.2.0~beta0+git922
+- Add Moorestown_Camera_Support.patch to make camera wok on Moorestown platform
+  (BMC#13133)
+
+* Sun Jan 30 2011 Xiaowei Ye <xiaowei.ye@intel.com> - 1.2.0~beta0+git922
+- Add camera_preview_workaround.patch to workaround a Graphics GLSL issue
+  leading to camera preview failure (BMC#13005)
+
+* Fri Jan 28 2011 Fathi Boudra <fathi.boudra@nokia.com> - 1.2.0~beta0+git922
+- Add revert_QTMOBILITY-614_bmc13087.patch to fix build failure on 3rd party
+  applications  (BMC#13087)
+
+* Wed Jan 26 2011 Fathi Boudra <fathi.boudra@nokia.com> - 1.2.0~beta0+git922
+- Add build_with_QT_NO_KEYWORDS_bmc12935.patch to fix contactsd build with
+  QT_NO_KEYWORDS (BMC#12935)
+
+* Tue Jan 25 2011 Halley Zhao <halley.zhao@intel.com> - 1.2.0~beta0+git922
+- Re-enable libva based codec support - libva-codec-enable.patch (FEA#11208,
+  FEA#12387)
+- Re-enable OpenGL-ES v2 shader usage - opengl-es2-shader-enable.patch
+- Use GL_CLAMP_TO_EDGE for video texture - GL_CLAMP_TO_EDGE_for_video_texture.patch
+
+* Thu Jan 20 2011 Fathi Boudra <fathi.boudra@nokia.com> - 1.2.0~beta0+git922
+- Update to Qt Mobility 1.2.0~beta0+git922 (git master branch commit 37952aa)
+  (FEA#10924, FEA#10925, FEA#10926, FEA#10927, FEA#10928, FEA#10929, FEA#10930,
+  FEA#10931, FEA#10932, FEA#10933, FEA#10934, FEA#10935, FEA#10936, FEA#10937,
+  FEA#10938)
+- Remove enable_pkgconfig_support.patch - fixed upstream
+- Add PkgConfigBr: QtSparqlTrackerExtensions, meegotouch-feedback and
+  meegotouchcore
+- Update %files and add missing pkgconfig files (BMC#11794)
+- Disable patches (it should be ported to 1.2):
+  libva-codec-enable.patch
+  opengl-es2-shader-enable.patch
+
+* Fri Dec 31 2010 Sunil Thaha <sunil.thaha@nokia.com> - 1.1.0+git2727
+- Update to Qt Mobility 1.1.0+git2727 (git master branch commit d33fdd4)
+- Add QtSparql to PkgConfigBr for location config.test to pass
+- Correct rpmlint error: txt and qmldir files have the execute bit set
+- Remove add_location_api_meego_implementation_using_geoclue.patch - merged upstream
+
+* Wed Dec 22 2010 Sunil Thaha <sunil.thaha@nokia.com> - 1.1.0+git2581
+- Updated version to  Qt Mobility 1.1.0+git2581
+- Switched the codebase to qtmobility-releases/1.2.0-tp1 at 8a1116774
+
+* Mon Dec 20 2010 Halley Zhao <halley.zhao@intel.com> - 1.1.0
+- Use OpenGL-ES v2 shader following Qt change - partial support (FEA#11208)
+
+* Tue Dec 15 2010 Halley Zhao <halley.zhao@intel.com> - 1.1.0
+- Add libva based codec support - partial support (FEA#11208)
+
+* Tue Dec 14 2010 Rohan McGovern <rohan.mcgovern@nokia.com> - 1.1.0+git2438
+- Fix hardcoded version in pkgconfig scriptlet
+
+* Wed Dec 8 2010 Sunil Thaha <sunil.thaha@nokia.com> - 1.1.0+git2438
+- Update to Qt Mobility 1.1.0+git2438 (git master branch commit b997e3fe)
+- Remove patches:
+  add_meego_build_flag.patch - merged upstream
+  fix_bmc_8705.patch - merged upstream
+  GL_CLAMP_TO_EDGE_of_video_texture.patch - merged upstream
+  enable_tracker_contacts_engine.patch - merged upstream
+  enable_sensorfw_support.patch - merged upstream
+  use_isabspath.patch - merged upstream
+- Update patches:
+  enable_camerabin_with_meego_target.patch
+  enable_pkgconfig_support.patch
+  fix_translations_install_path.patch
+- Add Qt Mobility Connectivity package
+- Add build requirements: blkid and connman
+- Update %files
+
+* Thu Dec 02 2010 Joonas Tanskanen <joonas.tanskanen@sasken> - 1.1.0
+- Update to enable_camerabin_with_meego_target.patch - Adds mediacontroller
+  videosource to Gstreamer camerabin backend (FEA#6878)
+
+* Wed Nov 10 2010 Fathi Boudra <fathi.boudra@nokia.com> - 1.1.0
+- Update to Qt Mobility 1.1.0
+- Update Qt Mobility url
+- Update fix_translations_install_path.patch to build the translations
+- Remove patches:
+  ftbfs_multimedia_examples.patch - fixed upstream
+  qmf_2010w36_support.patch - merged upstream
+  gstreamer_mediacapture_backend_bmc9202.patch - cherry-picked upstream (BMC#9202)
+- Add patches:
+  enable_camerabin_with_meego_target.patch - Thanks to Teemu Tuominen (BMC#6878)
+- Add build requirements: gstreamer-plugins-bad-free-0.10 and udev
+- Add Qt Mobility Feedback and Organizer QML plugins packages
+- Fix some rpmlint warnings (executable permissions and duplicate files)
+- Update %files tag (less verbose on the headers and demos/examples)
+
+* Wed Nov 03 2010 Fathi Boudra <fathi.boudra@nokia.com> - 1.1.0~beta2
+- Gstreamer mediacapture backend: postpone starting pipeline if video
+  output is not configured yet. Fix QCamera not working with QGraphicsVideoItem
+  (BMC#9202)
+
+* Fri Oct 29 2010 Kalle Lampila <kalle.lampila@cybercom.com> - 1.1.0~beta2
+- Fix segmentation fault in situation when sensor interface is not available
+  (BMC#8705)
+- Revert previous changes: libqtsensors_maemo6.so is included again.
+
+* Tue Oct 26 2010 Kaitlin Rupert <kaitlin.rupert@intel.com> - 1.1.0~beta2
+- Update enable_sensorfw_support.patch so that libqtsensors_maemo6.so is not
+  included - this plugin causes crashes (BMC#8705)
+
+* Mon Oct 04 2010 Fathi Boudra <fathi.boudra@nokia.com> - 1.1.0~beta2
+- Update to Qt Mobility 1.1.0~beta2
+- Update patches to apply against Qt Mobility 1.1.0~beta2
+- Disable default_subtitle_loading.patch - need some rework
+- Add patches:
+  use_isabspath.patch, use isAbsPath() for MeeGo instead of pathhelper.
+  pathhelper uses abs_path and returns undef for non-existent path.
+  qmf_2010w36_support.patch, fix build with QMF >= 2010w36 caused by library
+  renaming (qtopiamail -> qmfclient)
+- Add new APIs: Feedback, Document Gallery, Organizer and Versit (Organizer)
+- Cleanup build requirements:
+  replace qtopiamail -> qmfclient
+  replace sensorfw-devel -> pkgconfig(sensord)
+  remove QtWebKit
+  add xrandr, xrender and qt-devel-tools
+- Update QMF_INCLUDEDIR: qtopiamail -> qmfclient
+- Add demosdir and examplesdir configure options
+- Update modules list passed to configure
+- Update %files
+
+* Fri Sep 17 2010 Fathi Boudra <fathi.boudra@nokia.com> - 1.0.2
+- Add Location API Meego implementation using Geoclue (BMC#6729)
+  Thanks to John Chen and Jussi Kukkonen
+- Add geoclue, gypsy and gconf-2.0 build requirements
+
+* Wed Sep 08 2010 Kalle Lampila <kalle.lampila@cybercom.com> - 1.0.2
+- Enable support for sensorfw (BMC#6691)
+
+* Tue Sep 07 2010 Fathi Boudra <fathi.boudra@nokia.com> - 1.0.2
+- Add servicefw package - It will contain the Service Framework tool
+- Use %qmake_install macro
+
+* Thu Sep 02 2010 Fathi Boudra <fathi.boudra@nokia.com> - 1.0.2
+- Reintroduce qt-mobility package to fix qt-mobility update from 1.0.0 to 1.0.2
+  (BMC#5210)
+- Add 02_qtcontacts_api_1.1.0~git20100825.patch.bz2
+  Update QtContacts API to version 1.1.0~git20100825
+- Add 03_ftbfs_synthesizedDisplayLabel.patch
+  qtcontactsdocsample should be updated to build against the newer API
+- Disable Qt Mobility Bearer management module. It is merged in Qt as Qt
+  Network Bearer management module after Qt 4.7.0 beta 2 release.
+
+* Tue Aug 24 2010 Fathi Boudra <fathi.boudra@nokia.com> - 1.0.2
+- Add 01_qtcontacts_api_1.1.0_tp1.patch.bz2
+  Update QtContacts API to version 1.1.0tp1
+- Update qt-mobility-devel %files - add new QtContacts headers
+
+* Sun Aug 22 2010 Fathi Boudra <fathi.boudra@nokia.com> - 1.0.2
+- Add 0001_do_not_use_imageprovider.h_in_declarative_plugin.patch
+  It fixes ftbfs against Qt 4.7.0 rc1
+
+* Fri Aug 13 2010 Bernd Wachter <ext-bernd.wachter@nokia.com> - 1.0.2
+- Fix typo in add-meego-build-flag.patch which caused an incorrect pkgconfig
+  file for qtcontacts
+
+* Tue Aug 10 2010 Bernd Wachter <ext-bernd.wachter@nokia.com> - 1.0.2
+- Reintroduce spectacle support and yaml file
+- Add add-meego-build-flag.patch patch: add meego build flag and
+  pkgconfig support to contacts and versit modules
+- Build contacts and versit submodules with correct flags
+- Add contextsubscriber-1.0 and fdupes build requires
+
+* Mon Jul 26 2010 Fathi Boudra <fathi.boudra@nokia.com> - 1.0.2
+- Update to 1.0.2
+- Remove patches:
+  0001_rename_smallsensors.patch - merged
+  0002_rename_sysinfo.patch - merged
+  01_fix_ftbfs_incorrect_copy2build_output_value.patch - fixed
+  03_ftbfs_multimedia_plugin.patch - merged
+- Add libdeclarative-contacts and libdeclarative-sensors packages
+
+* Mon Jul 26 2010 Fathi Boudra <fathi.boudra@nokia.com> - 1.0.1
+- Sanitize spec file
+- Split binary packages
+- Drop spectacle amd yaml file
+- Add patches:
+  0001_rename_smallsensors.patch
+  0002_rename_sysinfo.patch
+  01_fix_ftbfs_incorrect_copy2build_output_value.patch
+  02_no_rpath.patch
+  03_ftbfs_multimedia_plugin.patch
+  04_ftbfs_multimedia_examples.patch
+  05_fix_translations_install_path.patch
+- Remove obsolete patches:
+  hardcode_import_path.patch
+  remove_private_header.patch
+  add_missing_pulse_lib.patch
+  install_example_executables_under_qt_dir.patch
+  change_QGLWidget_to_QtOpenGL.patch
+
+* Mon Jul 19 2010 Kaitlin Rupert <kaitlin.rupert@linux.intel.com> - 1.0.1
+- Remove patches for issues fixed upstream:
+  qtmobility-qpaintervideosurface.patch
+- Remove obsolete patches needed to build against Qt 4.7 pre-release
+  qt-mobility-1.0.0-install-headers-under-QtMobility.patch
+  fix-sysinfo-compile.patch
+  move-multimedia-out-of-namespace.patch
+  move-bearer-out-of-namespace.patch
+  move-location-out-of-namespace.patch
+  move-publishsubscript-out-of-namespace.patch
+  misc-namespace-fixes.patch
+  fix-install-locations.patch
+  change_qtmedia_export_to_qtmultimedia.patch
+  revert-AspectRatioMode_commit.patch
+  change_QtMedia_to_QtMultimedia.patch
+
+* Tue Jul 13 2010 Kaitlin Rupert <kaitlin.rupert@linux.intel.com> - 1.0 
+- Add default_subtitle_loading.patch - enable loading of external subtitle files
+
+* Thu Jul 1 2010 Kaitlin Rupert <kaitlin.rupert@linux.intel.com> - 1.0 
+- Replace QtMessagingFramework with messageserver pkgconfig 
+
+* Mon Jun 21 2010 Kaitlin Rupert <kaitlin.rupert@linux.intel.com> - 1.0 
+- Fix BMC #2291 - make sure package obsoletes 1.0.0beta1 version
+- Update version based on qtcontacts release tag 4.5.3.git20100520-0maemo1
+- Resolves BMC #2590 - an update version of qt-mobility is needed
+- Remove obsolete patches:
+   move-systeminfo-out-of-namespace.patch
+   qt-add-shared-flag.patch
+   qt-config.patch
+   qt-contacts-tracker.patch
+   qt-install-examples-under-qt-dir.patch
+   qt-install-plugins-under-lib.patch
+   qt-mobility-1.0.0-disable-broken-examples.patch
+   qt-mobility-1.0.0-fix-build.patch
+   qt-mobility-1.0.0-tmp-namespace-fix.patch
+   qt-mobility-1.0.0-use-qt-47-api.patch
+   removed_multimedia.patch
+
+* Thu May 13 2010 Kaitlin Rupert <kaitlin.rupert@linux.intel.com> - 1.0 
+- Add patches for improving video playback performance: 
+-  qtmobility-GL_CLAMP_TO_EDGE_of_video_texture_diff.patch
+-  qtmobility-qpaintervideosurface.patch 
+
+* Mon May 03 2010 Kaitlin Rupert <kaitlin.rupert@linux.intel.com> - 1.0 
+- Install qmt headers under /usr/include/QtMobility 
+
+* Sat May 01 2010 Kaitlin Rupert <kaitlin.rupert@linux.intel.com> - 1.0 
+- Fix problems building against Qt 4.7
+
+* Thu Apr 29 2010 Kaitlin Rupert <kaitlin.rupert@linux.intel.com> - 1.0 
+- Install headers in /usr/include/QtMobility
+
+* Tue Apr 27 2010 Kaitlin Rupert <kaitlin.rupert@linux.intel.com> - 1.0 
+- Move to release 1.0.0
+
+* Mon Apr 26 2010 Kaitlin Rupert <kaitlin.rupert@linux.intel.com> - 1.0 
+- Patch qt-mobility-1.0.0-mediaplayer-fixes.patch: upstream fixes that aren't 
+  in a stable branch yet - new functions:  processEOS(), setBufferProgress()
+- Remove epoch from spec
+
+* Tue Apr 13 2010 Kaitlin Rupert <kaitlin.rupert@linux.intel.com> - 1.0 
+- Build with playbin2 - new APIs are needed for GStreamer development   
+
+* Wed Mar 24 2010 Kaitlin Rupert <kaitlin.rupert@linux.intel.com> - 1.0 
+- Fix requires to enable build of libgstengine.so and other gstreamer plugins 
+
+* Fri Mar 12 2010 Kaitlin Rupert <kaitlin.rupert@linux.intel.com> - 1.0 
+- Add QT_SHARED compile flag - the qmake should be adding this automatically.
+  This is a tmp fix until qmake adds this for us.
+- Install plugins in {qt_lib_dir}/plugins
+- Add .pc file for pkgconfig compatibility
+
+* Mon Mar 8 2010 Kaitlin Rupert <kaitlin.rupert@linux.intel.com> - 1.0 
+- Initial import
+

@@ -1,0 +1,620 @@
+Description: This patch adds new fatures to qml_camera example. The example is used
+as camera UI in MeeGo Handset 1.2 release. The changes are:
+Switch the app to fullscreen
+Set suitable resolution for preview images and viewfinder to avoid software scaling.
+Add support for shutter and zoom buttons.
+Fix BMC#15325, BMC#15870
+Author: Joonas Tanskanen <joonas.tanskanen@sasken.com>
+--- a/examples/declarative-camera/CameraPropertyButton.qml
++++ b/examples/declarative-camera/CameraPropertyButton.qml
+@@ -45,10 +45,15 @@ Item {
+     id: propertyButton
+     property alias value : popup.currentValue
+     property alias model : popup.model
++    property bool popupVisible : popup.state == "visible"
+ 
+     width : 144
+     height: 70
+ 
++    function closePopup() {
++        popup.state = "invisible"
++    }
++
+     BorderImage {
+         id: buttonImage
+         source: "images/toolbutton.sci"
+@@ -73,7 +78,6 @@ Item {
+         state: "invisible"
+         visible: opacity > 0
+ 
+-        currentValue: propertyButton.value
+ 
+         states: [
+             State {
+--- a/examples/declarative-camera/CameraPropertyPopup.qml
++++ b/examples/declarative-camera/CameraPropertyPopup.qml
+@@ -83,9 +83,7 @@ Rectangle {
+         highlight: Rectangle { color: "gray"; radius: 5 }
+         currentIndex: indexForValue(propertyPopup.currentValue)
+ 
+-        onCurrentIndexChanged: {
+-            propertyPopup.currentValue = model.get(view.currentIndex).value
+-        }
++        boundsBehavior: Flickable.StopAtBounds
+ 
+         delegate: Item {
+             width: propertyPopup.itemWidth
+--- a/examples/declarative-camera/CaptureControls.qml
++++ b/examples/declarative-camera/CaptureControls.qml
+@@ -49,124 +49,117 @@ FocusScope {
+     property alias flashMode : flashModesButton.value
+     property alias exposureCompensation : exposureCompensationButton.value
+ 
+-    property int buttonsPanelWidth: buttonPaneShadow.width
+-
+     signal previewSelected
+     id : captureControls
+ 
+-    Rectangle {
+-        id: buttonPaneShadow
+-        width: buttonPanningPane.width + 16
+-        height: parent.height
+-        anchors.top: parent.top
+-        anchors.right: parent.right
+-        color: Qt.rgba(0.08, 0.08, 0.08, 1)
+-
+-        Flickable {
+-            id: buttonPanningPane
+-            anchors {
+-                right: parent.right
+-                top: parent.top
+-                bottom: parent.bottom
+-                margins: 8
+-            }
+-            width: buttonsColumn.width
+-
+-            contentWidth: buttonsColumn.width
+-            contentHeight: buttonsColumn.height
+-
+-            Column {
+-                id: buttonsColumn
+-                spacing: 8
+-
+-                FocusButton {
+-                    camera: captureControls.camera
+-                }
++    Column {
++        id: buttonsColumn
++        spacing : 8
++        anchors.right : parent.right
++        anchors.rightMargin: 8
++        anchors.top : parent.top
++        anchors.topMargin: 8
++
++//        FocusButton {
++//            camera: captureControls.camera
++//        }
++
++        CameraButton {
++            text: "Capture"
++            onClicked: camera.captureImage()
++        }
+ 
+-                CameraButton {
+-                    text: "Capture"
+-                    onClicked: camera.captureImage()
++        CameraPropertyButton {
++            id : flashModesButton
++            value: Camera.FlashOff
++            model: ListModel {
++                ListElement {
++                    icon: "images/camera_flash_auto.png"
++                    value: Camera.FlashAuto
++                    text: "Auto"
+                 }
+-
+-                CameraPropertyButton {
+-                    id : flashModesButton
++                ListElement {
++                    icon: "images/camera_flash_off.png"
+                     value: Camera.FlashOff
+-                    model: ListModel {
+-                        ListElement {
+-                            icon: "images/camera_flash_auto.png"
+-                            value: Camera.FlashAuto
+-                            text: "Auto"
+-                        }
+-                        ListElement {
+-                            icon: "images/camera_flash_off.png"
+-                            value: Camera.FlashOff
+-                            text: "Off"
+-                        }
+-                        ListElement {
+-                            icon: "images/camera_flash_fill.png"
+-                            value: Camera.FlashOn
+-                            text: "On"
+-                        }
+-                        ListElement {
+-                            icon: "images/camera_flash_redeye.png"
+-                            value: Camera.FlashRedEyeReduction
+-                            text: "Red Eye Reduction"
+-                        }
+-                    }
++                    text: "Off"
++                }
++                ListElement {
++                    icon: "images/camera_flash_fill.png"
++                    value: Camera.FlashOn
++                    text: "On"
++                }
++                ListElement {
++                    icon: "images/camera_flash_redeye.png"
++                    value: Camera.FlashRedEyeReduction
++                    text: "Red Eye Reduction"
+                 }
++            }
++
++            onPopupVisibleChanged: {
++                if( popupVisible )
++                    wbModesButton.closePopup();
++            }
+ 
+-                CameraPropertyButton {
+-                    id : wbModesButton
++        }
++
++        CameraPropertyButton {
++            id : wbModesButton
++            value: Camera.WhiteBalanceAuto
++            model: ListModel {
++                ListElement {
++                    icon: "images/camera_auto_mode.png"
+                     value: Camera.WhiteBalanceAuto
+-                    model: ListModel {
+-                        ListElement {
+-                            icon: "images/camera_auto_mode.png"
+-                            value: Camera.WhiteBalanceAuto
+-                            text: "Auto"
+-                        }
+-                        ListElement {
+-                            icon: "images/camera_white_balance_sunny.png"
+-                            value: Camera.WhiteBalanceSunlight
+-                            text: "Sunlight"
+-                        }
+-                        ListElement {
+-                            icon: "images/camera_white_balance_cloudy.png"
+-                            value: Camera.WhiteBalanceCloudy
+-                            text: "Cloudy"
+-                        }
+-                        ListElement {
+-                            icon: "images/camera_white_balance_incandescent.png"
+-                            value: Camera.WhiteBalanceIncandescent
+-                            text: "Incandescent"
+-                        }
+-                        ListElement {
+-                            icon: "images/camera_white_balance_flourescent.png"
+-                            value: Camera.WhiteBalanceFluorescent
+-                            text: "Fluorescent"
+-                        }
+-                    }
++                    text: "Auto"
+                 }
+-
+-                ExposureCompensationButton {
+-                    id : exposureCompensationButton
++                ListElement {
++                    icon: "images/camera_white_balance_sunny.png"
++                    value: Camera.WhiteBalanceSunlight
++                    text: "Sunlight"
+                 }
+-
+-                CameraButton {
+-                    text: "View"
+-                    onClicked: captureControls.previewSelected()
+-                    visible: captureControls.previewAvailable
++                ListElement {
++                    icon: "images/camera_white_balance_cloudy.png"
++                    value: Camera.WhiteBalanceCloudy
++                    text: "Cloudy"
+                 }
+-
+-                CameraButton {
+-                    id: quitButton
+-                    text: "Quit"
+-                    onClicked: Qt.quit()
++                ListElement {
++                    icon: "images/camera_white_balance_incandescent.png"
++                    value: Camera.WhiteBalanceIncandescent
++                    text: "Incandescent"
++                }
++                ListElement {
++                    icon: "images/camera_white_balance_flourescent.png"
++                    value: Camera.WhiteBalanceFluorescent
++                    text: "Fluorescent"
+                 }
++            }
+ 
++            onPopupVisibleChanged: {
++                if( popupVisible )
++                    flashModesButton.closePopup();
+             }
++
++        }
++
++        ExposureCompensationButton {
++            id : exposureCompensationButton
++        }
++
++        CameraButton {
++            text: "View"
++            onClicked: captureControls.previewSelected()
++            visible: captureControls.previewAvailable
+         }
+     }
+ 
++    CameraButton {
++        id: quitButton
++        anchors.right : parent.right
++        anchors.rightMargin: 8
++        anchors.bottom : parent.bottom
++        anchors.bottomMargin: 8
++        text: "Quit"
++        onClicked: Qt.quit()
++    }
+ 
+     Item {
+         id: exposureDetails
+--- a/examples/declarative-camera/ExposureCompensationButton.qml
++++ b/examples/declarative-camera/ExposureCompensationButton.qml
+@@ -42,7 +42,7 @@ import Qt 4.7
+ 
+ Item {
+     id: exposureCompensation
+-    property real value : flickableList.items[flickableList.index]
++    property alias value : flickableList.value
+     signal clicked
+ 
+     width : 144
+@@ -64,10 +64,33 @@ Item {
+ 
+     FlickableList {
+         anchors.fill: buttonImage
+-        id: flickableList        
++        id: flickableList
++        property real value : 0.0
+         items: ["-2", "-1.5", "-1", "-0.5", "0", "+0.5", "+1", "+1.5", "+2"]
+         index: 4
+ 
++        onIndexChanged: {
++            value = items[index]
++        }
++
++        onValueChanged: {
++            var newIndex = indexForValue(value)
++            if( newIndex != index)
++                scrollTo(newIndex)
++        }
++
++        function indexForValue(value) {
++            // Find index for given value from item list
++            for(var i=0; i < items.length; i++) {
++                if(items[i] == value)
++                    return i
++            }
++
++            // If no index for the value found the centermost
++            // index is returned
++            return Math.floor(items.length / 2)
++        }
++
+         onClicked: exposureCompensation.clicked()
+ 
+         delegate: Text {
+--- a/examples/declarative-camera/FlickableList.qml
++++ b/examples/declarative-camera/FlickableList.qml
+@@ -54,7 +54,7 @@ Item {
+ 
+     function scrollTo(id) {
+         var x = id*flickableList.itemWidth
+-        if (flickArea.contentX != x) {
++        if (flickArea.contentX != x || centeringAnimation.running) {
+             centeringAnimation.stop();
+             flickArea.newX = id*flickableList.itemWidth
+             centeringAnimation.start();
+--- a/examples/declarative-camera/declarative-camera.pro
++++ b/examples/declarative-camera/declarative-camera.pro
+@@ -17,7 +17,12 @@ win32 {
+     MOBILITY+=multimedia
+ }
+ 
+-SOURCES += $$PWD/qmlcamera.cpp
++HEADERS += \
++    qmlcamerasettings.h
++
++SOURCES += $$PWD/qmlcamera.cpp \
++    qmlcamerasettings.cpp
++
+ !mac:TARGET = qml_camera
+ else:TARGET = QmlCamera
+ 
+@@ -29,3 +34,4 @@ symbian {
+     TARGET.EPOCHEAPSIZE = 0x20000 0x3000000
+ }
+ 
++
+--- a/examples/declarative-camera/declarative-camera.qml
++++ b/examples/declarative-camera/declarative-camera.qml
+@@ -44,10 +44,21 @@ import QtMultimediaKit 1.1
+ Rectangle {
+     id : cameraUI
+     color: "black"
+-    state: "PhotoCapture"
++    state: "Initialization"
+ 
+     states: [
+         State {
++            name: "Initialization"
++            StateChangeScript {
++                script: {
++                    camera.visible = true
++                    camera.focus = false
++                    stillControls.visible = false
++                    photoPreview.visible = false
++                }
++            }
++        },
++        State {
+             name: "PhotoCapture"
+             StateChangeScript {
+                 script: {
+@@ -71,6 +82,19 @@ Rectangle {
+         }
+     ]
+ 
++    Component.onCompleted: {
++        // Initialize settings from ini file
++        stillControls.flashMode = settings.flashMode
++        stillControls.whiteBalance = settings.whiteBalanceMode
++        stillControls.exposureCompensation = settings.exposureCompensation
++        cameraUI.state = "PhotoCapture"
++    }
++
++    // Bind setting controls to settings object
++    Binding { target: settings; property: "flashMode"; value: stillControls.flashMode; when: cameraUI.state != "Initialization" }
++    Binding { target: settings; property: "whiteBalanceMode"; value: stillControls.whiteBalance; when: cameraUI.state != "Initialization" }
++    Binding { target: settings; property: "exposureCompensation"; value: stillControls.exposureCompensation; when: cameraUI.state != "Initialization" }
++
+     PhotoPreview {
+         id : photoPreview
+         anchors.fill : parent
+@@ -79,7 +103,7 @@ Rectangle {
+ 
+         Keys.onPressed : {
+             //return to capture mode if the shutter button is touched
+-            if (event.key == Qt.Key_CameraFocus) {
++            if (event.key == Qt.Key_CameraFocus || event.key == Qt.Key_WebCam ) {
+                 cameraUI.state = "PhotoCapture"
+                 event.accepted = true;
+             }
+@@ -88,12 +112,16 @@ Rectangle {
+ 
+     Camera {
+         id: camera
++        objectName: "camera"
+         x: 0
+         y: 0
+-        width: parent.width - stillControls.buttonsPanelWidth
++        width: parent.width
+         height: parent.height
+         focus: visible //to receive focus and capture key events
+-        //captureResolution : "640x480"
++        
++        previewResolution : camera.width + "x" + camera.height
++        viewfinderResolution : camera.width + "x" + camera.height
++
+ 
+         flashMode: stillControls.flashMode
+         whiteBalanceMode: stillControls.whiteBalance
+@@ -104,6 +132,55 @@ Rectangle {
+             stillControls.previewAvailable = true
+             cameraUI.state = "PhotoPreview"
+         }
++        
++        Keys.onPressed : {
++            if (event.key == Qt.Key_Camera || event.key == Qt.Key_WebCam ) {
++                // Capture button fully pressed
++                event.accepted = true;
++                // Take still image
++                camera.captureImage();
++            } else if (event.key == Qt.Key_ZoomIn || event.key == Qt.Key_F7  ) {
++                // Zoom in
++                event.accepted = true;
++                zoomOutAnimation.stop();
++                zoomInAnimation.duration = 4000 - camera.digitalZoom / Math.min(4.0, camera.maximumDigitalZoom) * 4000;
++                zoomInAnimation.start();
++            } else if (event.key == Qt.Key_ZoomOut || event.key == Qt.Key_F8 ) {
++                // Zoom out
++                event.accepted = true;
++                zoomInAnimation.stop();
++                zoomOutAnimation.duration = 4000 * camera.digitalZoom / Math.min(4.0, camera.maximumDigitalZoom);
++                zoomOutAnimation.start();
++            }
++        }
++        
++        Keys.onReleased : {
++            if (event.key == Qt.Key_ZoomIn || event.key == Qt.Key_F7  ) {
++                // Zoom in
++                event.accepted = true;
++                zoomOutAnimation.stop();
++            } else if (event.key == Qt.Key_ZoomOut || event.key == Qt.Key_F8) {
++			    // Zoom out
++			    event.accepted = true;
++			    zoomOutAnimation.stop();
++			}
++        }
++        
++        PropertyAnimation {
++            id: zoomInAnimation;
++            target: camera;
++            property: "digitalZoom";
++            to: Math.min(4.0, camera.maximumDigitalZoom);
++            duration: 4000;
++        }
++        
++        PropertyAnimation {
++            id: zoomOutAnimation;
++            target: camera;
++            property: "digitalZoom";
++            to: 0.0;
++            duration: 4000;
++        }
+     }
+ 
+     CaptureControls {
+@@ -112,5 +189,4 @@ Rectangle {
+         camera: camera
+         onPreviewSelected: cameraUI.state = "PhotoPreview"
+     }
+-
+ }
+--- a/examples/declarative-camera/qmlcamera.cpp
++++ b/examples/declarative-camera/qmlcamera.cpp
+@@ -42,11 +42,14 @@
+ #include <QtGui/QDesktopWidget>
+ #include <QtDeclarative/QDeclarativeView>
+ #include <QtDeclarative/QDeclarativeEngine>
++#include <QDeclarativeContext>
+ 
+ #if !defined(QT_NO_OPENGL)
+ #include <QtOpenGL/QGLWidget>
+ #endif
+ 
++#include "qmlcamerasettings.h"
++
+ int main(int argc, char *argv[])
+ {
+ 
+@@ -66,17 +69,25 @@ int main(int argc, char *argv[])
+ #endif
+ 
+     QApplication application(argc, argv);
++
++    QCoreApplication::setOrganizationName("Nokia");
++    QCoreApplication::setOrganizationDomain("nokia.com");
++    QCoreApplication::setApplicationName("meegocamera");
++    QmlCameraSettings settings;
++
+     const QString mainQmlApp = QLatin1String("qrc:/declarative-camera.qml");
+     QDeclarativeView view;
+ #if !defined(QT_NO_OPENGL) && !defined(Q_WS_MAEMO_5) && !defined(Q_WS_S60)
+     view.setViewport(new QGLWidget);
+ #endif
++    view.rootContext()->setContextProperty("settings", &settings);
+     view.setSource(QUrl(mainQmlApp));
+     view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
+     // Qt.quit() called in embedded .qml by default only emits
+     // quit() signal, so do this (optionally use Qt.exit()).
+     QObject::connect(view.engine(), SIGNAL(quit()), qApp, SLOT(quit()));
+-#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
++
++#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6) || defined(Q_WS_MEEGO)
+     view.setGeometry(application.desktop()->screenGeometry());
+     view.showFullScreen();
+ #else
+--- a/features/basic_examples_setup.pri
++++ b/features/basic_examples_setup.pri
+@@ -44,6 +44,10 @@ QMAKE_LIBDIR = $$OUTPUT_DIR/lib
+ 
+ INCLUDEPATH+= $$QT_MOBILITY_SOURCE_TREE/src/global
+ 
++meego{
++	DEFINES += Q_WS_MEEGO
++}
++
+ maemo6 {
+     DEFINES+= Q_WS_MAEMO_6
+     DEFINES+= QTM_EXAMPLES_SMALL_SCREEN
++++ a/examples/declarative-camera/qmlcamerasettings.cp
++++ b/examples/declarative-camera/qmlcamerasettings.cpp
+@@ -0,0 +1,45 @@
++#include "qmlcamerasettings.h"
++
++
++#define WB_MODE_KEY "wb-mode"
++#define FLASH_MODE_KEY "flash-mode"
++#define EXPOSURE_COMPENSATION_KEY "exposure-compensation"
++
++
++QmlCameraSettings::QmlCameraSettings(QObject *parent) :
++    QSettings(parent)
++{
++}
++
++QVariant QmlCameraSettings::whiteBalanceMode() const
++{
++    return value(WB_MODE_KEY, QVariant(0));
++}
++
++QVariant QmlCameraSettings::flashMode() const
++{
++    return value(FLASH_MODE_KEY, QVariant(0));
++}
++
++QVariant QmlCameraSettings::exposureCompensation() const
++{
++    return value(EXPOSURE_COMPENSATION_KEY, QVariant(0));
++}
++
++void QmlCameraSettings::setWhiteBalanceMode(QVariant wb)
++{
++    setValue(WB_MODE_KEY, wb);
++    emit whiteBalanceModeChanged(wb);
++}
++
++void QmlCameraSettings::setFlashMode(QVariant flash)
++{
++    setValue(FLASH_MODE_KEY, flash);
++    emit flashModeChanged(flash);
++}
++
++void QmlCameraSettings::setExposureCompensation(QVariant exposure)
++{
++    setValue(EXPOSURE_COMPENSATION_KEY, exposure);
++    emit exposureCompensationChanged(exposure);
++}
++++ a/examples/declarative-camera/qmlcamerasettings.h
++++ b/examples/declarative-camera/qmlcamerasettings.h
+@@ -0,0 +1,33 @@
++#ifndef QMLCAMERASETTINGS_H
++#define QMLCAMERASETTINGS_H
++
++#include <QSettings>
++
++class QmlCameraSettings : public QSettings
++{
++    Q_OBJECT
++    Q_PROPERTY(QVariant whiteBalanceMode READ whiteBalanceMode WRITE setWhiteBalanceMode NOTIFY whiteBalanceModeChanged)
++    Q_PROPERTY(QVariant flashMode READ flashMode WRITE setFlashMode NOTIFY flashModeChanged)
++    Q_PROPERTY(QVariant exposureCompensation READ exposureCompensation WRITE setExposureCompensation NOTIFY exposureCompensationChanged)
++public:
++    explicit QmlCameraSettings(QObject *parent = 0);
++
++    QVariant whiteBalanceMode() const;
++    QVariant flashMode() const;
++    QVariant exposureCompensation() const;
++
++signals:
++
++    void whiteBalanceModeChanged(QVariant);
++    void flashModeChanged(QVariant);
++    void exposureCompensationChanged(QVariant);
++
++public slots:
++
++    void setWhiteBalanceMode(QVariant);
++    void setFlashMode(QVariant);
++    void setExposureCompensation(QVariant);
++
++};
++
++#endif // QMLCAMERASETTINGS_H

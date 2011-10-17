@@ -1,0 +1,105 @@
+From 41d68ecf9cb0287343778e8c8c9eb91a7e39becb Mon Sep 17 00:00:00 2001
+From: Robin Burchell <robin.burchell@collabora.com>
+Date: Wed, 21 Sep 2011 14:29:19 +0200
+Subject: [PATCH] Fix the contact model using the QAIM API incorrectly.
+
+beginInsertRows() takes firstRow, lastRow - not number of rows, so using 'count'
+here was incorrect.
+
+beginInsertRows() should also never be invoked for 0 rows, so explicitly check
+for no contacts returned.
+
+This caused a crash in the case similar to:
+
+ListView {
+    model: ContactModel {
+    }
+}
+
+Thanks to: Tom Swindell, for finding the bug.
+Thanks to: John Brooks, for spotting the cause of this bug.
+
+Reviewed-by: John Brooks
+---
+ .../contacts/qdeclarativecontactmodel.cpp          |   59 +++++++++++---------
+ 1 files changed, 32 insertions(+), 27 deletions(-)
+
+diff --git a/plugins/declarative/contacts/qdeclarativecontactmodel.cpp b/plugins/declarative/contacts/qdeclarativecontactmodel.cpp
+index d0e038d..d37a09e 100644
+--- a/plugins/declarative/contacts/qdeclarativecontactmodel.cpp
++++ b/plugins/declarative/contacts/qdeclarativecontactmodel.cpp
+@@ -554,39 +554,44 @@ void QDeclarativeContactModel::requestUpdated()
+ {
+     //Don't use d->m_fetchRequest, this pointer might be invalid if cancelUpdate() was called, use QObject::sender() instead.
+     QContactFetchRequest* req = qobject_cast<QContactFetchRequest*>(QObject::sender());
+-    if (req && req->isFinished()) {
+-        QList<QContact> contacts = req->contacts();
+-        if (d->m_contacts.isEmpty()) {
+-            QList<QDeclarativeContact*> dcs;
+-            foreach (QContact c, contacts) {
++    if (!req || !req->isFinished())
++        return;
++
++    QList<QContact> contacts = req->contacts();
++
++    if (contacts.isEmpty())
++        return;
++
++    if (d->m_contacts.isEmpty()) {
++        QList<QDeclarativeContact*> dcs;
++        foreach (QContact c, contacts) {
++            QDeclarativeContact* dc = new QDeclarativeContact(c, d->m_manager->detailDefinitions(c.type()), this);
++            dcs.append(dc);
++            d->m_contactMap.insert(c.localId(), dc);
++        }
++
++        reset();
++        beginInsertRows(QModelIndex(), 0, req->contacts().count() - 1);
++        d->m_contacts = dcs;
++        endInsertRows();
++    } else {
++        //Partial updating, insert the fetched contacts into the the exist contact list.
++        QList<QDeclarativeContact*> dcs;
++        foreach (QContact c, contacts) {
++            if (d->m_contactMap.contains(c.localId())) {
++                d->m_contactMap.value(c.localId())->setContact(c);
++            } else {
+                 QDeclarativeContact* dc = new QDeclarativeContact(c, d->m_manager->detailDefinitions(c.type()), this);
+                 dcs.append(dc);
+                 d->m_contactMap.insert(c.localId(), dc);
+             }
+-
+-            reset();
+-            beginInsertRows(QModelIndex(), 0, req->contacts().count());
+-            d->m_contacts = dcs;
+-            endInsertRows();
+-        } else {
+-            //Partial updating, insert the fetched contacts into the the exist contact list.
+-            QList<QDeclarativeContact*> dcs;
+-            foreach (QContact c, contacts) {
+-                if (d->m_contactMap.contains(c.localId())) {
+-                    d->m_contactMap.value(c.localId())->setContact(c);
+-                } else {
+-                    QDeclarativeContact* dc = new QDeclarativeContact(c, d->m_manager->detailDefinitions(c.type()), this);
+-                    dcs.append(dc);
+-                    d->m_contactMap.insert(c.localId(), dc);
+-                }
+-            }
+         }
+-        emit contactsChanged();
+-        emit errorChanged();
+-        req->deleteLater();
+-        d->m_fetchRequest = 0;
+-        d->m_updatePending = false;
+     }
++    emit contactsChanged();
++    emit errorChanged();
++    req->deleteLater();
++    d->m_fetchRequest = 0;
++    d->m_updatePending = false;
+ }
+ 
+ /*!
+-- 
+1.7.5.4
+

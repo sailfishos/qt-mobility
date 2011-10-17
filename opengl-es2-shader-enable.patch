@@ -1,0 +1,31 @@
+Description: Use OpenGL-ES v2 shader following Qt change
+  - Enable GLSL support for GLESv2: GLSL is supported by GLESv2 by default, try
+    to find it from extension string will fail
+Author: Halley Zhao <halley.zhao at intel.com>
+Bug: FEA#11208
+--- a/src/multimedia/multimedia.pro
++++ b/src/multimedia/multimedia.pro
+@@ -209,6 +209,9 @@ symbian {
+     TARGET.CAPABILITY = ALL -TCB
+     LIBS += -lefsrv
+ }
++meego {
++    DEFINES += QT_OPENGL_ES_2
++}
+ 
+ CONFIG += middleware
+ include(../../features/deploy.pri)
+--- a/src/multimedia/qpaintervideosurface.cpp
++++ b/src/multimedia/qpaintervideosurface.cpp
+@@ -1550,9 +1550,10 @@ void QPainterVideoSurface::setGLContext(
+         if (extensions.contains("ARB_fragment_program"))
+             m_shaderTypes |= FragmentProgramShader;
+ #endif
+-
++#ifndef QT_OPENGL_ES_2
+         if (QGLShaderProgram::hasOpenGLShaderPrograms(m_glContext)
+                 && extensions.contains("ARB_shader_objects"))
++#endif
+             m_shaderTypes |= GlslShader;
+     }
+ 

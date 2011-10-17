@@ -1,0 +1,31 @@
+From 4e3a3a21f272818b6104fae727b953b8f7d56714 Mon Sep 17 00:00:00 2001
+From: Robin Burchell <robin.burchell@collabora.com>
+Date: Wed, 21 Sep 2011 17:15:43 +0200
+Subject: [PATCH] Revert "compile on MeeGo"
+
+This reverts commit ba9c12987e1294d66da1c992c1abb3f029108b19.
+
+MeeGo now has a mkcal from Harmattan again, so this patch isn't necessary.
+---
+ plugins/organizer/mkcal/mkcalengine.cpp |    4 ----
+ 1 files changed, 0 insertions(+), 4 deletions(-)
+
+diff --git a/plugins/organizer/mkcal/mkcalengine.cpp b/plugins/organizer/mkcal/mkcalengine.cpp
+index 8f446ba..71377fa 100644
+--- a/plugins/organizer/mkcal/mkcalengine.cpp
++++ b/plugins/organizer/mkcal/mkcalengine.cpp
+@@ -232,11 +232,7 @@ QList<QOrganizerItem> MKCalEngine::internalItemOccurrences(const QOrganizerItem&
+             maxCount);
+     KCalCore::Recurrence *recurrence = generatorIncidence->recurrence();
+     foreach (const mKCal::ExtendedCalendar::ExpandedIncidence& expandedIncidence, incidenceList) {
+-#ifdef Q_WS_MEEGO
+-        QDateTime incidenceDateTime = expandedIncidence.first;
+-#else
+         QDateTime incidenceDateTime = expandedIncidence.first.dtStart;
+-#endif
+         KCalCore::Incidence::Ptr incidence = expandedIncidence.second;
+         QOrganizerItem instance;
+         //unfortunately sometimes expandRecurrences will include also those occurrences which are in exDates
+-- 
+1.7.5.4
+

@@ -1,0 +1,31 @@
+From ccf0591493e42d3525510d8e01d742277350cd46 Mon Sep 17 00:00:00 2001
+From: Christophe Dumez <christophe.dumez@intel.com>
+Date: Tue, 10 May 2011 12:38:31 +0300
+Subject: [PATCH] QVersitReader: Add MeeGo-specific value/types
+
+Add MeeGo specific value/types to the mValueTypeMap map.
+These changes are required by the new QtContacts backend
+for Evolution Data Server (EDS).
+---
+ src/versit/qversitreader_p.cpp |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/src/versit/qversitreader_p.cpp b/src/versit/qversitreader_p.cpp
+index a558c2c..b5c31cb 100644
+--- a/src/versit/qversitreader_p.cpp
++++ b/src/versit/qversitreader_p.cpp
+@@ -422,6 +422,11 @@ QVersitReaderPrivate::valueTypeMap() {
+                              QVersitProperty::ListType);
+         mValueTypeMap->insert(qMakePair(QVersitDocument::VCard40Type, QString::fromAscii("X-NICKNAME")),
+                              QVersitProperty::ListType);
++        // MeeGo-specific value/types
++        mValueTypeMap->insert(qMakePair(QVersitDocument::VCard30Type, QString::fromAscii("X-SYNCEVO-QTCONTACTS")),
++                             QVersitProperty::CompoundType);
++        mValueTypeMap->insert(qMakePair(QVersitDocument::VCard30Type, QString::fromAscii("X-EDS-QTCONTACTS")),
++                             QVersitProperty::CompoundType);
+     }
+     return mValueTypeMap;
+ }
+-- 
+1.7.4.4
+

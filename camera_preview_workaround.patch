@@ -1,0 +1,30 @@
+Description: Some camera supports raw RGB or YUV video frame, RGB is selected
+in qt-mobility. when qt-mobility try to load RGB video frame to OpenGL texture
+by GLSL shader, it doesn’t work as expected on Pinetrail. It is Gfx bug
+(BMC#13005). So we hack in qt-mobility to disable RGB video (source) frame
+support, then camera could work.
+--- a/plugins/multimedia/gstreamer/mediacapture/qgstreamercapturesession.cpp
++++ b/plugins/multimedia/gstreamer/mediacapture/qgstreamercapturesession.cpp
+@@ -306,14 +306,20 @@ GstElement *QGstreamerCaptureSession::bu
+             resolution = m_imageEncodeControl->imageSettings().resolution();
+         }
+ 
+-        if (!resolution.isEmpty() || frameRate > 0.001) {
++        //if (!resolution.isEmpty() || frameRate > 0.001)
++        {
+             GstCaps *caps = gst_caps_new_empty();
+             QStringList structureTypes;
+-            structureTypes << "video/x-raw-yuv" << "video/x-raw-rgb";
++            structureTypes << "video/x-raw-yuv";// << "video/x-raw-rgb";
+ 
+             foreach(const QString &structureType, structureTypes) {
+                 GstStructure *structure = gst_structure_new(structureType.toAscii().constData(), NULL);
+ 
++                if(structureType.contains(QString("yuv")))
++                {
++                    gst_structure_set(structure, "format", GST_TYPE_FOURCC, GST_MAKE_FOURCC('I','4','2','0') , NULL);
++                }
++
+                 if (!resolution.isEmpty()) {
+                     gst_structure_set(structure, "width", G_TYPE_INT, resolution.width(), NULL);
+                     gst_structure_set(structure, "height", G_TYPE_INT, resolution.height(), NULL);
