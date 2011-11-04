@@ -1,4 +1,0 @@
-<package project="home:stskeeps:qtmobilitywebkit" name="qt-mobility">
-  <title>APIs for mobile device functionality</title>
-  <description>Qt Mobility delivers a set of new APIs for mobile device functionality.</description>
-</package>
