@@ -44,7 +44,7 @@ Requires:
     - libqtfeedback1 = %{version}
     - libqtgallery1 = %{version}
     - libqtlocation1 = %{version}
-#     - libqtmessaging1 = %{version}
+    - libqtmessaging1 = %{version}
     - libqtmultimediakit1 = %{version}
 #    - libqtorganizer1 = %{version}
     - libqtpublishsubscribe1 = %{version}
@@ -72,7 +72,7 @@ PkgConfigBR:
 #    - libmkcal
     - libpulse
 #    - qttracker
-#    - qmfclient
+    - qmfclient
     - sensord
     - udev
     - x11
@@ -152,15 +152,15 @@ SubPackages:
           This package contains the Location API. It provides a library for distributing
           and receiving location data using arbitrary data sources.
 
-#     - Name: libqtmessaging1
-#       AsWholeName: yes
-#       Summary: Qt Mobility Messaging module
-#       Group: System/Libraries
-#       Description: |
-#           Qt Mobility delivers a set of new APIs for mobile device functionality.
-# 
-#           This package contains the Messaging API. It is a common interface for handling
-#           SMS, MMS, MIME Email and TNEF Email messages.
+    - Name: libqtmessaging1
+      AsWholeName: yes
+      Summary: Qt Mobility Messaging module
+      Group: System/Libraries
+      Description: |
+          Qt Mobility delivers a set of new APIs for mobile device functionality.
+
+          This package contains the Messaging API. It is a common interface for handling
+          SMS, MMS, MIME Email and TNEF Email messages.
 
     - Name: libqtmultimediakit1
       AsWholeName: yes
@@ -292,14 +292,14 @@ SubPackages:
 
           This package contains the Location QML plugin for QtDeclarative.
 
-#     - Name: libdeclarative-messaging
-#       AsWholeName: yes
-#       Summary: Qt Mobility Messaging QML plugin
-#       Group: System/Libraries
-#       Description: |
-#           Qt Mobility delivers a set of new APIs for mobile device functionality.
-# 
-#           This package contains the Messaging QML plugin for QtDeclarative.
+    - Name: libdeclarative-messaging
+      AsWholeName: yes
+      Summary: Qt Mobility Messaging QML plugin
+      Group: System/Libraries
+      Description: |
+          Qt Mobility delivers a set of new APIs for mobile device functionality.
+
+          This package contains the Messaging QML plugin for QtDeclarative.
 
     - Name: libdeclarative-multimedia
       AsWholeName: yes

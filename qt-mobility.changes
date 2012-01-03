@@ -1,3 +1,6 @@
+* Tue Jan 03 2012 Marko Saukko <marko.saukko@cybercom.com> - 1.2.0
+- Fixes MER#3: QtMessaging module missing.
+
 * Thu Sep 29 2011 Marko Saukko <marko.saukko@cybercom.com> - 1.2.0
 - Cut of some unneeded dependencies.
 - Dropped organizer and messaging modules.
