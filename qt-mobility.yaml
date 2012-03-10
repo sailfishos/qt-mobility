@@ -69,6 +69,8 @@ PkgConfigBR:
 #    - ix86:libva-x11
 PkgBR:
     - qt-devel-tools
+# Used for generating build indices on build time
+    - gdb
 Configure: none
 Builder: none
 RunFdupes:

@@ -66,6 +66,7 @@ BuildRequires:  pkgconfig(xrandr)
 BuildRequires:  pkgconfig(xrender)
 BuildRequires:  pkgconfig(xv)
 BuildRequires:  qt-devel-tools
+BuildRequires:  gdb
 BuildRequires:  fdupes
 
 
