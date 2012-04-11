@@ -8,8 +8,6 @@ URL: http://qt.gitorious.org/qt-mobility
 Sources:
     - http://get.qt.nokia.com/qt/add-ons/%{name}-opensource-src-%{version}.tar.gz
 SourcePrefix: "%{name}-opensource-src-%{version}"
-#ExtraSources:
-#    - meegocamera.desktop;%{_desktopdir}
 Patches:
     - revert_QTMOBILITY-614_bmc13087.patch
     - no_rpath.patch
@@ -41,22 +39,16 @@ Description: |
 PkgConfigBR:
     - QtGui
     - QtOpenGL
-#    - QtSparql
-#    - QtSparqlTrackerExtensions
     - alsa
     - blkid
     - bluez
     - connman
     - contextsubscriber-1.0
     - gconf-2.0
-#    - geoclue
     - gstreamer-plugins-bad-free-0.10
     - gstreamer-plugins-base-0.10
-#    - gypsy
-#    - libiphb
-#    - libmkcal
+    - libmkcal
     - libpulse
-#    - qttracker
     - qmfclient
     - sensord
     - udev
@@ -65,8 +57,6 @@ PkgConfigBR:
     - xrandr
     - xrender
     - xv
-#    - ix86:gst-vabuffer
-#    - ix86:libva-x11
 PkgBR:
     - qt-devel-tools
 # Used for generating build indices on build time
@@ -90,13 +80,13 @@ SubPackages:
             - libqtlocation1 = %{version}-%{release}
             - libqtmessaging1 = %{version}-%{release}
             - libqtmultimediakit1 = %{version}-%{release}
-#             - libqtorganizer1 = %{version}-%{release}
+            - libqtorganizer1 = %{version}-%{release}
             - libqtpublishsubscribe1 = %{version}-%{release}
             - libqtsensors1 = %{version}-%{release}
             - libqtserviceframework1 = %{version}-%{release}
             - libqtsysteminfo1 = %{version}-%{release}
             - libqtversit1 = %{version}-%{release}
-#             - libqtversitorganizer1 = %{version}-%{release}
+            - libqtversitorganizer1 = %{version}-%{release}
             - libdeclarative-connectivity = %{version}-%{release}
             - libdeclarative-contacts = %{version}-%{release}
             - libdeclarative-feedback = %{version}-%{release}
@@ -104,7 +94,7 @@ SubPackages:
             - libdeclarative-location = %{version}-%{release}
             - libdeclarative-messaging = %{version}-%{release}
             - libdeclarative-multimedia = %{version}-%{release}
-#             - libdeclarative-organizer = %{version}-%{release}
+            - libdeclarative-organizer = %{version}-%{release}
             - libdeclarative-publishsubscribe = %{version}-%{release}
             - libdeclarative-sensors = %{version}-%{release}
             - libdeclarative-serviceframework = %{version}-%{release}
@@ -205,19 +195,19 @@ SubPackages:
           This package contains a set of APIs to play and record media, and manage a
           collection of media content.
 
-#     - Name: libqtorganizer1
-#       AsWholeName: yes
-#       Summary: Qt Mobility Organizer module
-#       Group: System/Libraries
-#       Requires:
-#             - "%{name}-l10n = %{version}-%{release}"
-#       Description: |
-#           Qt Mobility delivers a set of new APIs for mobile device functionality.
-# 
-#           This package contains an API for management of calendar, scheduling and
-#           personal data from local or remote backends. It includes the ability to create,
-#           edit, list, delete and lookup organizer information whether it is stored
-#           locally or remotely.
+    - Name: libqtorganizer1
+      AsWholeName: yes
+      Summary: Qt Mobility Organizer module
+      Group: System/Libraries
+      Requires:
+            - "%{name}-l10n = %{version}-%{release}"
+      Description: |
+          Qt Mobility delivers a set of new APIs for mobile device functionality.
+
+          This package contains an API for management of calendar, scheduling and
+          personal data from local or remote backends. It includes the ability to create,
+          edit, list, delete and lookup organizer information whether it is stored
+          locally or remotely.
 
     - Name: libqtpublishsubscribe1
       AsWholeName: yes
@@ -281,16 +271,16 @@ SubPackages:
 
           This package contains an API to manage Versit documents, such as vCards.
 
-#     - Name: libqtversitorganizer1
-#       AsWholeName: yes
-#       Summary: Qt Mobility Versit (Organizer) module
-#       Group: System/Libraries
-#       Description: |
-#           Qt Mobility delivers a set of new APIs for mobile device functionality.
-# 
-#           This package contains an API to manage Versit documents, such as iCalendar
-#           documents. It interfaces the Organizer API and uses the same framework as for
-#           vCards.
+    - Name: libqtversitorganizer1
+      AsWholeName: yes
+      Summary: Qt Mobility Versit (Organizer) module
+      Group: System/Libraries
+      Description: |
+          Qt Mobility delivers a set of new APIs for mobile device functionality.
+
+          This package contains an API to manage Versit documents, such as iCalendar
+          documents. It interfaces the Organizer API and uses the same framework as for
+          vCards.
 
     - Name: libdeclarative-connectivity
       AsWholeName: yes
@@ -369,16 +359,16 @@ SubPackages:
 
           This package contains the Multimedia QML plugin for QtDeclarative.
 
-#     - Name: libdeclarative-organizer
-#       AsWholeName: yes
-#       Summary: Qt Mobility Organizer QML plugin
-#       Group: System/Libraries
-#       Requires:
-#             - "%{name}-l10n = %{version}-%{release}"
-#       Description: |
-#           Qt Mobility delivers a set of new APIs for mobile device functionality.
-# 
-#           This package contains the Organizer QML plugin for QtDeclarative.
+    - Name: libdeclarative-organizer
+      AsWholeName: yes
+      Summary: Qt Mobility Organizer QML plugin
+      Group: System/Libraries
+      Requires:
+            - "%{name}-l10n = %{version}-%{release}"
+      Description: |
+          Qt Mobility delivers a set of new APIs for mobile device functionality.
+
+          This package contains the Organizer QML plugin for QtDeclarative.
 
     - Name: libdeclarative-publishsubscribe
       AsWholeName: yes
@@ -447,13 +437,13 @@ SubPackages:
             - libqtlocation1 = %{version}-%{release}
             - libqtmessaging1 = %{version}-%{release}
             - libqtmultimediakit1 = %{version}-%{release}
-#             - libqtorganizer1 = %{version}-%{release}
+            - libqtorganizer1 = %{version}-%{release}
             - libqtpublishsubscribe1 = %{version}-%{release}
             - libqtsensors1 = %{version}-%{release}
             - libqtserviceframework1 = %{version}-%{release}
             - libqtsysteminfo1 = %{version}-%{release}
             - libqtversit1 = %{version}-%{release}
-#             - libqtversitorganizer1 = %{version}-%{release}
+            - libqtversitorganizer1 = %{version}-%{release}
             - libdeclarative-connectivity = %{version}-%{release}
             - libdeclarative-contacts = %{version}-%{release}
             - libdeclarative-feedback = %{version}-%{release}
@@ -461,7 +451,7 @@ SubPackages:
             - libdeclarative-location = %{version}-%{release}
             - libdeclarative-messaging = %{version}-%{release}
             - libdeclarative-multimedia = %{version}-%{release}
-#             - libdeclarative-organizer = %{version}-%{release}
+            - libdeclarative-organizer = %{version}-%{release}
             - libdeclarative-publishsubscribe = %{version}-%{release}
             - libdeclarative-sensors = %{version}-%{release}
             - libdeclarative-serviceframework = %{version}-%{release}
@@ -479,13 +469,3 @@ SubPackages:
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
           This package contains Qt Mobility translations.
-
-#    - Name: meegocamera
-#      AsWholeName: yes
-#      Summary: MeeGo Handset Camera UI
-#      Group: System/GUI/Other
-#      Description: |
-#          This package contains the camera application for MeeGo handsets.
-#      Requires:
-#        - gst-plugins-camera
-#        - gstreamer >= 0.10.32

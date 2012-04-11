@@ -56,6 +56,7 @@ BuildRequires:  pkgconfig(contextsubscriber-1.0)
 BuildRequires:  pkgconfig(gconf-2.0)
 BuildRequires:  pkgconfig(gstreamer-plugins-bad-free-0.10)
 BuildRequires:  pkgconfig(gstreamer-plugins-base-0.10)
+BuildRequires:  pkgconfig(libmkcal)
 BuildRequires:  pkgconfig(libpulse)
 BuildRequires:  pkgconfig(qmfclient)
 BuildRequires:  pkgconfig(sensord)
@@ -187,6 +188,22 @@ This package contains a set of APIs to play and record media, and manage a
 collection of media content.
 
 
+%package -n libqtorganizer1
+Summary:    Qt Mobility Organizer module
+Group:      System/Libraries
+Requires:   %{name}-l10n = %{version}-%{release}
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
+
+%description -n libqtorganizer1
+Qt Mobility delivers a set of new APIs for mobile device functionality.
+
+This package contains an API for management of calendar, scheduling and
+personal data from local or remote backends. It includes the ability to create,
+edit, list, delete and lookup organizer information whether it is stored
+locally or remotely.
+
+
 %package -n libqtpublishsubscribe1
 Summary:    Qt Mobility Publish and Subscribe module
 Group:      System/Libraries
@@ -255,6 +272,20 @@ Requires(postun): /sbin/ldconfig
 Qt Mobility delivers a set of new APIs for mobile device functionality.
 
 This package contains an API to manage Versit documents, such as vCards.
+
+
+%package -n libqtversitorganizer1
+Summary:    Qt Mobility Versit (Organizer) module
+Group:      System/Libraries
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
+
+%description -n libqtversitorganizer1
+Qt Mobility delivers a set of new APIs for mobile device functionality.
+
+This package contains an API to manage Versit documents, such as iCalendar
+documents. It interfaces the Organizer API and uses the same framework as for
+vCards.
 
 
 %package -n libdeclarative-connectivity
@@ -334,6 +365,17 @@ Qt Mobility delivers a set of new APIs for mobile device functionality.
 This package contains the Multimedia QML plugin for QtDeclarative.
 
 
+%package -n libdeclarative-organizer
+Summary:    Qt Mobility Organizer QML plugin
+Group:      System/Libraries
+Requires:   %{name}-l10n = %{version}-%{release}
+
+%description -n libdeclarative-organizer
+Qt Mobility delivers a set of new APIs for mobile device functionality.
+
+This package contains the Organizer QML plugin for QtDeclarative.
+
+
 %package -n libdeclarative-publishsubscribe
 Summary:    Qt Mobility Publish and Subscribe QML plugin
 Group:      System/Libraries
@@ -400,11 +442,13 @@ Requires:   libqtgallery1 = %{version}-%{release}
 Requires:   libqtlocation1 = %{version}-%{release}
 Requires:   libqtmessaging1 = %{version}-%{release}
 Requires:   libqtmultimediakit1 = %{version}-%{release}
+Requires:   libqtorganizer1 = %{version}-%{release}
 Requires:   libqtpublishsubscribe1 = %{version}-%{release}
 Requires:   libqtsensors1 = %{version}-%{release}
 Requires:   libqtserviceframework1 = %{version}-%{release}
 Requires:   libqtsysteminfo1 = %{version}-%{release}
 Requires:   libqtversit1 = %{version}-%{release}
+Requires:   libqtversitorganizer1 = %{version}-%{release}
 Requires:   libdeclarative-connectivity = %{version}-%{release}
 Requires:   libdeclarative-contacts = %{version}-%{release}
 Requires:   libdeclarative-feedback = %{version}-%{release}
@@ -412,6 +456,7 @@ Requires:   libdeclarative-gallery = %{version}-%{release}
 Requires:   libdeclarative-location = %{version}-%{release}
 Requires:   libdeclarative-messaging = %{version}-%{release}
 Requires:   libdeclarative-multimedia = %{version}-%{release}
+Requires:   libdeclarative-organizer = %{version}-%{release}
 Requires:   libdeclarative-publishsubscribe = %{version}-%{release}
 Requires:   libdeclarative-sensors = %{version}-%{release}
 Requires:   libdeclarative-serviceframework = %{version}-%{release}
@@ -512,14 +557,11 @@ export QMF_LIBDIR=%{_libdir}
 -languages "ar cs da de es fr he hu ja pl pt ru sk sl sv zh_CN zh_TW" \
 -examples \
 -demos \
--modules "location contacts multimedia publishsubscribe versit messaging systeminfo serviceframework sensors gallery feedback connectivity" \
+-modules "location contacts multimedia publishsubscribe versit messaging systeminfo serviceframework sensors gallery organizer feedback connectivity" \
 -meego \
 #%ifarch %{ix86}
 #-enable-libva
 #%endif
-
-# Modules that we don't compile:
-# organizer (requires mkcal)
 
 make %{?_smp_mflags}
 # << build pre
@@ -596,6 +638,11 @@ find %{buildroot}%{_libdir}/qtmobility -type f -perm /u+x,g+x,o+x \( -false \
 %postun -n libqtmultimediakit1 -p /sbin/ldconfig
 
 
+%post -n libqtorganizer1 -p /sbin/ldconfig
+
+%postun -n libqtorganizer1 -p /sbin/ldconfig
+
+
 %post -n libqtpublishsubscribe1 -p /sbin/ldconfig
 
 %postun -n libqtpublishsubscribe1 -p /sbin/ldconfig
@@ -619,6 +666,14 @@ find %{buildroot}%{_libdir}/qtmobility -type f -perm /u+x,g+x,o+x \( -false \
 %post -n libqtversit1 -p /sbin/ldconfig
 
 %postun -n libqtversit1 -p /sbin/ldconfig
+
+
+%post -n libqtversitorganizer1 -p /sbin/ldconfig
+
+%postun -n libqtversitorganizer1 -p /sbin/ldconfig
+
+
+
 
 
 
@@ -970,74 +1025,74 @@ find %{buildroot}%{_libdir}/qtmobility -type f -perm /u+x,g+x,o+x \( -false \
 %{_includedir}/QtMultimediaKit/QVideoWidget
 %{_includedir}/QtMultimediaKit/QVideoWidgetControl
 %{_includedir}/QtMultimediaKit/QVideoWindowControl
-# %{_includedir}/QtOrganizer/*.h
-# %{_includedir}/QtOrganizer/QOrganizerAbstractRequest
-# %{_includedir}/QtOrganizer/QOrganizerCollection
-# %{_includedir}/QtOrganizer/QOrganizerCollectionChangeSet
-# %{_includedir}/QtOrganizer/QOrganizerCollectionEngineId
-# %{_includedir}/QtOrganizer/QOrganizerCollectionFetchRequest
-# %{_includedir}/QtOrganizer/QOrganizerCollectionId
-# %{_includedir}/QtOrganizer/QOrganizerCollectionRemoveRequest
-# %{_includedir}/QtOrganizer/QOrganizerCollectionSaveRequest
-# %{_includedir}/QtOrganizer/QOrganizerEvent
-# %{_includedir}/QtOrganizer/QOrganizerEventOccurrence
-# %{_includedir}/QtOrganizer/QOrganizerEventTime
-# %{_includedir}/QtOrganizer/QOrganizerItem
-# %{_includedir}/QtOrganizer/QOrganizerItemAudibleReminder
-# %{_includedir}/QtOrganizer/QOrganizerItemChangeLogFilter
-# %{_includedir}/QtOrganizer/QOrganizerItemChangeSet
-# %{_includedir}/QtOrganizer/QOrganizerItemCollectionFilter
-# %{_includedir}/QtOrganizer/QOrganizerItemComment
-# %{_includedir}/QtOrganizer/QOrganizerItemDescription
-# %{_includedir}/QtOrganizer/QOrganizerItemDetail
-# %{_includedir}/QtOrganizer/QOrganizerItemDetailDefinition
-# %{_includedir}/QtOrganizer/QOrganizerItemDetailDefinitionFetchRequest
-# %{_includedir}/QtOrganizer/QOrganizerItemDetailDefinitionRemoveRequest
-# %{_includedir}/QtOrganizer/QOrganizerItemDetailDefinitionSaveRequest
-# %{_includedir}/QtOrganizer/QOrganizerItemDetailFieldDefinition
-# %{_includedir}/QtOrganizer/QOrganizerItemDetailFilter
-# %{_includedir}/QtOrganizer/QOrganizerItemDetailRangeFilter
-# %{_includedir}/QtOrganizer/QOrganizerItemDisplayLabel
-# %{_includedir}/QtOrganizer/QOrganizerItemEmailReminder
-# %{_includedir}/QtOrganizer/QOrganizerItemEngineId
-# %{_includedir}/QtOrganizer/QOrganizerItemFetchByIdRequest
-# %{_includedir}/QtOrganizer/QOrganizerItemFetchForExportRequest
-# %{_includedir}/QtOrganizer/QOrganizerItemFetchHint
-# %{_includedir}/QtOrganizer/QOrganizerItemFetchRequest
-# %{_includedir}/QtOrganizer/QOrganizerItemFilter
-# %{_includedir}/QtOrganizer/QOrganizerItemGuid
-# %{_includedir}/QtOrganizer/QOrganizerItemId
-# %{_includedir}/QtOrganizer/QOrganizerItemIdFetchRequest
-# %{_includedir}/QtOrganizer/QOrganizerItemIdFilter
-# %{_includedir}/QtOrganizer/QOrganizerItemIntersectionFilter
-# %{_includedir}/QtOrganizer/QOrganizerItemInvalidFilter
-# %{_includedir}/QtOrganizer/QOrganizerItemLocation
-# %{_includedir}/QtOrganizer/QOrganizerItemObserver
-# %{_includedir}/QtOrganizer/QOrganizerItemOccurrenceFetchRequest
-# %{_includedir}/QtOrganizer/QOrganizerItemParent
-# %{_includedir}/QtOrganizer/QOrganizerItemPriority
-# %{_includedir}/QtOrganizer/QOrganizerItemRecurrence
-# %{_includedir}/QtOrganizer/QOrganizerItemReminder
-# %{_includedir}/QtOrganizer/QOrganizerItemRemoveRequest
-# %{_includedir}/QtOrganizer/QOrganizerItemSaveRequest
-# %{_includedir}/QtOrganizer/QOrganizerItemSortOrder
-# %{_includedir}/QtOrganizer/QOrganizerItemTag
-# %{_includedir}/QtOrganizer/QOrganizerItemTimestamp
-# %{_includedir}/QtOrganizer/QOrganizerItemType
-# %{_includedir}/QtOrganizer/QOrganizerItemUnionFilter
-# %{_includedir}/QtOrganizer/QOrganizerItemVisualReminder
-# %{_includedir}/QtOrganizer/QOrganizerJournal
-# %{_includedir}/QtOrganizer/QOrganizerJournalTime
-# %{_includedir}/QtOrganizer/QOrganizerManager
-# %{_includedir}/QtOrganizer/QOrganizerManagerEngine
-# %{_includedir}/QtOrganizer/QOrganizerManagerEngineFactory
-# %{_includedir}/QtOrganizer/QOrganizerManagerEngineV2
-# %{_includedir}/QtOrganizer/QOrganizerNote
-# %{_includedir}/QtOrganizer/QOrganizerRecurrenceRule
-# %{_includedir}/QtOrganizer/QOrganizerTodo
-# %{_includedir}/QtOrganizer/QOrganizerTodoOccurrence
-# %{_includedir}/QtOrganizer/QOrganizerTodoProgress
-# %{_includedir}/QtOrganizer/QOrganizerTodoTime
+%{_includedir}/QtOrganizer/*.h
+%{_includedir}/QtOrganizer/QOrganizerAbstractRequest
+%{_includedir}/QtOrganizer/QOrganizerCollection
+%{_includedir}/QtOrganizer/QOrganizerCollectionChangeSet
+%{_includedir}/QtOrganizer/QOrganizerCollectionEngineId
+%{_includedir}/QtOrganizer/QOrganizerCollectionFetchRequest
+%{_includedir}/QtOrganizer/QOrganizerCollectionId
+%{_includedir}/QtOrganizer/QOrganizerCollectionRemoveRequest
+%{_includedir}/QtOrganizer/QOrganizerCollectionSaveRequest
+%{_includedir}/QtOrganizer/QOrganizerEvent
+%{_includedir}/QtOrganizer/QOrganizerEventOccurrence
+%{_includedir}/QtOrganizer/QOrganizerEventTime
+%{_includedir}/QtOrganizer/QOrganizerItem
+%{_includedir}/QtOrganizer/QOrganizerItemAudibleReminder
+%{_includedir}/QtOrganizer/QOrganizerItemChangeLogFilter
+%{_includedir}/QtOrganizer/QOrganizerItemChangeSet
+%{_includedir}/QtOrganizer/QOrganizerItemCollectionFilter
+%{_includedir}/QtOrganizer/QOrganizerItemComment
+%{_includedir}/QtOrganizer/QOrganizerItemDescription
+%{_includedir}/QtOrganizer/QOrganizerItemDetail
+%{_includedir}/QtOrganizer/QOrganizerItemDetailDefinition
+%{_includedir}/QtOrganizer/QOrganizerItemDetailDefinitionFetchRequest
+%{_includedir}/QtOrganizer/QOrganizerItemDetailDefinitionRemoveRequest
+%{_includedir}/QtOrganizer/QOrganizerItemDetailDefinitionSaveRequest
+%{_includedir}/QtOrganizer/QOrganizerItemDetailFieldDefinition
+%{_includedir}/QtOrganizer/QOrganizerItemDetailFilter
+%{_includedir}/QtOrganizer/QOrganizerItemDetailRangeFilter
+%{_includedir}/QtOrganizer/QOrganizerItemDisplayLabel
+%{_includedir}/QtOrganizer/QOrganizerItemEmailReminder
+%{_includedir}/QtOrganizer/QOrganizerItemEngineId
+%{_includedir}/QtOrganizer/QOrganizerItemFetchByIdRequest
+%{_includedir}/QtOrganizer/QOrganizerItemFetchForExportRequest
+%{_includedir}/QtOrganizer/QOrganizerItemFetchHint
+%{_includedir}/QtOrganizer/QOrganizerItemFetchRequest
+%{_includedir}/QtOrganizer/QOrganizerItemFilter
+%{_includedir}/QtOrganizer/QOrganizerItemGuid
+%{_includedir}/QtOrganizer/QOrganizerItemId
+%{_includedir}/QtOrganizer/QOrganizerItemIdFetchRequest
+%{_includedir}/QtOrganizer/QOrganizerItemIdFilter
+%{_includedir}/QtOrganizer/QOrganizerItemIntersectionFilter
+%{_includedir}/QtOrganizer/QOrganizerItemInvalidFilter
+%{_includedir}/QtOrganizer/QOrganizerItemLocation
+%{_includedir}/QtOrganizer/QOrganizerItemObserver
+%{_includedir}/QtOrganizer/QOrganizerItemOccurrenceFetchRequest
+%{_includedir}/QtOrganizer/QOrganizerItemParent
+%{_includedir}/QtOrganizer/QOrganizerItemPriority
+%{_includedir}/QtOrganizer/QOrganizerItemRecurrence
+%{_includedir}/QtOrganizer/QOrganizerItemReminder
+%{_includedir}/QtOrganizer/QOrganizerItemRemoveRequest
+%{_includedir}/QtOrganizer/QOrganizerItemSaveRequest
+%{_includedir}/QtOrganizer/QOrganizerItemSortOrder
+%{_includedir}/QtOrganizer/QOrganizerItemTag
+%{_includedir}/QtOrganizer/QOrganizerItemTimestamp
+%{_includedir}/QtOrganizer/QOrganizerItemType
+%{_includedir}/QtOrganizer/QOrganizerItemUnionFilter
+%{_includedir}/QtOrganizer/QOrganizerItemVisualReminder
+%{_includedir}/QtOrganizer/QOrganizerJournal
+%{_includedir}/QtOrganizer/QOrganizerJournalTime
+%{_includedir}/QtOrganizer/QOrganizerManager
+%{_includedir}/QtOrganizer/QOrganizerManagerEngine
+%{_includedir}/QtOrganizer/QOrganizerManagerEngineFactory
+%{_includedir}/QtOrganizer/QOrganizerManagerEngineV2
+%{_includedir}/QtOrganizer/QOrganizerNote
+%{_includedir}/QtOrganizer/QOrganizerRecurrenceRule
+%{_includedir}/QtOrganizer/QOrganizerTodo
+%{_includedir}/QtOrganizer/QOrganizerTodoOccurrence
+%{_includedir}/QtOrganizer/QOrganizerTodoProgress
+%{_includedir}/QtOrganizer/QOrganizerTodoTime
 %{_includedir}/QtPublishSubscribe/*.h
 %{_includedir}/QtPublishSubscribe/QValueSpace
 %{_includedir}/QtPublishSubscribe/QValueSpacePublisher
@@ -1114,14 +1169,14 @@ find %{buildroot}%{_libdir}/qtmobility -type f -perm /u+x,g+x,o+x \( -false \
 %{_includedir}/QtVersit/QVersitReader
 %{_includedir}/QtVersit/QVersitResourceHandler
 %{_includedir}/QtVersit/QVersitWriter
-# %{_includedir}/QtVersitOrganizer/*.h
-# %{_includedir}/QtVersitOrganizer/QVersitOrganizerExporter
-# %{_includedir}/QtVersitOrganizer/QVersitOrganizerExporterDetailHandler
-# %{_includedir}/QtVersitOrganizer/QVersitOrganizerHandler
-# %{_includedir}/QtVersitOrganizer/QVersitOrganizerHandlerFactory
-# %{_includedir}/QtVersitOrganizer/QVersitOrganizerImporter
-# %{_includedir}/QtVersitOrganizer/QVersitOrganizerImporterPropertyHandler
-# %{_includedir}/QtVersitOrganizer/QVersitTimeZoneHandler
+%{_includedir}/QtVersitOrganizer/*.h
+%{_includedir}/QtVersitOrganizer/QVersitOrganizerExporter
+%{_includedir}/QtVersitOrganizer/QVersitOrganizerExporterDetailHandler
+%{_includedir}/QtVersitOrganizer/QVersitOrganizerHandler
+%{_includedir}/QtVersitOrganizer/QVersitOrganizerHandlerFactory
+%{_includedir}/QtVersitOrganizer/QVersitOrganizerImporter
+%{_includedir}/QtVersitOrganizer/QVersitOrganizerImporterPropertyHandler
+%{_includedir}/QtVersitOrganizer/QVersitTimeZoneHandler
 %{_libdir}/libQtConnectivity.prl
 %{_libdir}/libQtConnectivity.so
 %{_libdir}/libQtContacts.prl
@@ -1136,8 +1191,8 @@ find %{buildroot}%{_libdir}/qtmobility -type f -perm /u+x,g+x,o+x \( -false \
 %{_libdir}/libQtMessaging.so
 %{_libdir}/libQtMultimediaKit.prl
 %{_libdir}/libQtMultimediaKit.so
-# %{_libdir}/libQtOrganizer.prl
-# %{_libdir}/libQtOrganizer.so
+%{_libdir}/libQtOrganizer.prl
+%{_libdir}/libQtOrganizer.so
 %{_libdir}/libQtPublishSubscribe.prl
 %{_libdir}/libQtPublishSubscribe.so
 %{_libdir}/libQtSensors.prl
@@ -1148,8 +1203,8 @@ find %{buildroot}%{_libdir}/qtmobility -type f -perm /u+x,g+x,o+x \( -false \
 %{_libdir}/libQtSystemInfo.so
 %{_libdir}/libQtVersit.prl
 %{_libdir}/libQtVersit.so
-# %{_libdir}/libQtVersitOrganizer.prl
-# %{_libdir}/libQtVersitOrganizer.so
+%{_libdir}/libQtVersitOrganizer.prl
+%{_libdir}/libQtVersitOrganizer.so
 %{_libdir}/pkgconfig/QtConnectivity.pc
 %{_libdir}/pkgconfig/QtContacts.pc
 %{_libdir}/pkgconfig/QtFeedback.pc
@@ -1157,13 +1212,13 @@ find %{buildroot}%{_libdir}/qtmobility -type f -perm /u+x,g+x,o+x \( -false \
 %{_libdir}/pkgconfig/QtLocation.pc
 %{_libdir}/pkgconfig/QtMessaging.pc
 %{_libdir}/pkgconfig/QtMultimediaKit.pc
-# %{_libdir}/pkgconfig/QtOrganizer.pc
+%{_libdir}/pkgconfig/QtOrganizer.pc
 %{_libdir}/pkgconfig/QtPublishSubscribe.pc
 %{_libdir}/pkgconfig/QtSensors.pc
 %{_libdir}/pkgconfig/QtServiceFramework.pc
 %{_libdir}/pkgconfig/QtSystemInfo.pc
 %{_libdir}/pkgconfig/QtVersit.pc
-# %{_libdir}/pkgconfig/QtVersitOrganizer.pc
+%{_libdir}/pkgconfig/QtVersitOrganizer.pc
 %{_datadir}/qt4/mkspecs/features/mobility.prf
 %{_datadir}/qt4/mkspecs/features/mobilityconfig.prf
 # << files devel
@@ -1216,10 +1271,14 @@ find %{buildroot}%{_libdir}/qtmobility -type f -perm /u+x,g+x,o+x \( -false \
 %{_libdir}/qt4/plugins/mediaservice/libqtmedia_v4lengine.so
 %{_libdir}/qt4/plugins/playlistformats/libqtmultimediakit_m3u.so
 %{_libdir}/qt4/plugins/audio/libqtmedia_pulse.so
-# From organizer
-# %{_libdir}/libQtOrganizer.so.*
-# %{_libdir}/qt4/plugins/organizer/libqtorganizer_mkcal.so
 # << files libqtmultimediakit1
+
+%files -n libqtorganizer1
+%defattr(-,root,root,-)
+# >> files libqtorganizer1
+%{_libdir}/libQtOrganizer.so.*
+%{_libdir}/qt4/plugins/organizer/libqtorganizer_mkcal.so
+# << files libqtorganizer1
 
 %files -n libqtpublishsubscribe1
 %defattr(-,root,root,-)
@@ -1254,9 +1313,13 @@ find %{buildroot}%{_libdir}/qtmobility -type f -perm /u+x,g+x,o+x \( -false \
 %{_libdir}/libQtVersit.so.*
 %{_libdir}/qt4/plugins/versit/libqtversit_backuphandler.so
 %{_libdir}/qt4/plugins/versit/libqtversit_vcardpreserver.so
-# Fron libqtversitorganizer1
-# %{_libdir}/libQtVersitOrganizer.so.*
 # << files libqtversit1
+
+%files -n libqtversitorganizer1
+%defattr(-,root,root,-)
+# >> files libqtversitorganizer1
+%{_libdir}/libQtVersitOrganizer.so.*
+# << files libqtversitorganizer1
 
 %files -n libdeclarative-connectivity
 %defattr(-,root,root,-)
@@ -1305,10 +1368,14 @@ find %{buildroot}%{_libdir}/qtmobility -type f -perm /u+x,g+x,o+x \( -false \
 # >> files libdeclarative-multimedia
 %{_libdir}/qt4/imports/QtMultimediaKit/libdeclarative_multimedia.so
 %{_libdir}/qt4/imports/QtMultimediaKit/qmldir
-# libdeclarative-organizer
-#%{_libdir}/qt4/imports/QtMobility/organizer/libdeclarative_organizer.so
-#%{_libdir}/qt4/imports/QtMobility/organizer/qmldir
 # << files libdeclarative-multimedia
+
+%files -n libdeclarative-organizer
+%defattr(-,root,root,-)
+# >> files libdeclarative-organizer
+%{_libdir}/qt4/imports/QtMobility/organizer/libdeclarative_organizer.so
+%{_libdir}/qt4/imports/QtMobility/organizer/qmldir
+# << files libdeclarative-organizer
 
 %files -n libdeclarative-publishsubscribe
 %defattr(-,root,root,-)
