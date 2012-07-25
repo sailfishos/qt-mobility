@@ -1,0 +1,69 @@
+From 0918fa1d3cf2e7f1a7504fe18be25238766ef530 Mon Sep 17 00:00:00 2001
+From: Joonas Tanskanen <joonas.tanskanen@sasken.com>
+Date: Thu, 26 Jul 2012 13:55:56 +0200
+Subject: [PATCH 1/8] Enable gstreamer camerabin backend.
+
+Adds mediacontroller videosource to Gstreamer camerabin backend.
+---
+ .../gstreamer/camerabin/camerabinaudioencoder.cpp  |    2 +-
+ .../gstreamer/camerabin/camerabinsession.cpp       |    1 +
+ .../gstreamer/camerabin/camerabinvideoencoder.cpp  |    2 +-
+ plugins/multimedia/gstreamer/gstreamer.pro         |    4 ++++
+ 4 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/plugins/multimedia/gstreamer/camerabin/camerabinaudioencoder.cpp b/plugins/multimedia/gstreamer/camerabin/camerabinaudioencoder.cpp
+index a6131ea..7e81463 100644
+--- a/plugins/multimedia/gstreamer/camerabin/camerabinaudioencoder.cpp
++++ b/plugins/multimedia/gstreamer/camerabin/camerabinaudioencoder.cpp
+@@ -49,7 +49,7 @@ CameraBinAudioEncoder::CameraBinAudioEncoder(QObject *parent)
+ {
+     QList<QByteArray> codecCandidates;
+ 
+-#if defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
++#if defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6) || defined(Q_WS_MEEGO)
+     codecCandidates << "audio/AAC" << "audio/PCM" << "audio/AMR" << "audio/AMR-WB" << "audio/speex"
+                     << "audio/ADPCM" << "audio/iLBC" << "audio/vorbis" << "audio/mpeg" << "audio/FLAC";
+ 
+diff --git a/plugins/multimedia/gstreamer/camerabin/camerabinsession.cpp b/plugins/multimedia/gstreamer/camerabin/camerabinsession.cpp
+index 7f75911..efc5fc6 100644
+--- a/plugins/multimedia/gstreamer/camerabin/camerabinsession.cpp
++++ b/plugins/multimedia/gstreamer/camerabin/camerabinsession.cpp
+@@ -401,6 +401,7 @@ GstElement *CameraBinSession::buildVideoSrc()
+     } else {
+         QList<QByteArray> candidates;
+         candidates << "subdevsrc"
++                   << "mcsrc"
+                    << "v4l2camsrc"
+                    << "v4l2src"
+                    << "autovideosrc";
+diff --git a/plugins/multimedia/gstreamer/camerabin/camerabinvideoencoder.cpp b/plugins/multimedia/gstreamer/camerabin/camerabinvideoencoder.cpp
+index fedfb67..878fe41 100644
+--- a/plugins/multimedia/gstreamer/camerabin/camerabinvideoencoder.cpp
++++ b/plugins/multimedia/gstreamer/camerabin/camerabinvideoencoder.cpp
+@@ -49,7 +49,7 @@ CameraBinVideoEncoder::CameraBinVideoEncoder(CameraBinSession *session)
+     :QVideoEncoderControl(session), m_session(session)
+ {
+     QList<QByteArray> codecCandidates;
+-#if defined(Q_WS_MAEMO_5)
++#if defined(Q_WS_MAEMO_5) || defined(Q_WS_MEEGO)
+     codecCandidates << "video/mpeg4" << "video/h264" << "video/h263" << "video/theora"
+                     << "video/mpeg2" << "video/mpeg1" << "video/mjpeg" << "video/VP8" << "video/h261";
+ 
+diff --git a/plugins/multimedia/gstreamer/gstreamer.pro b/plugins/multimedia/gstreamer/gstreamer.pro
+index dcd18c2..bbd59a0 100644
+--- a/plugins/multimedia/gstreamer/gstreamer.pro
++++ b/plugins/multimedia/gstreamer/gstreamer.pro
+@@ -52,6 +52,10 @@ maemo6 {
+     }
+ }
+ 
++meego {
++  PKGCONFIG +=gstreamer-plugins-bad-free-0.10
++}
++
+ # Input
+ HEADERS += \
+     qgstreamermessage.h \
+-- 
+1.7.7.5 (Apple Git-26)
+

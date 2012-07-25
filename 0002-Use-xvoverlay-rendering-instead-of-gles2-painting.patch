@@ -1,0 +1,51 @@
+From 48e639f563a517e950996de876e5f8378b12b982 Mon Sep 17 00:00:00 2001
+From: Joonas Tanskanen <joonas.tanskanen@sasken.com>
+Date: Thu, 26 Jul 2012 13:59:51 +0200
+Subject: [PATCH 2/8] Use xvoverlay rendering instead of gles2 painting.
+
+Reason for this is that current implementation of gles2 painting
+(QVideoSurfaceGlslPainter) doesn't support UYVY and YUY2 pixel formats.
+
+It is also very slow (only 13 FPS) when tested on n900.
+---
+ .../gstreamer/camerabin/camerabinservice.cpp       |    5 +++--
+ src/multimedia/multimedia.pro                      |    5 ++++-
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/plugins/multimedia/gstreamer/camerabin/camerabinservice.cpp b/plugins/multimedia/gstreamer/camerabin/camerabinservice.cpp
+index 0604c48..cb528e9 100644
+--- a/plugins/multimedia/gstreamer/camerabin/camerabinservice.cpp
++++ b/plugins/multimedia/gstreamer/camerabin/camerabinservice.cpp
+@@ -119,9 +119,10 @@ CameraBinService::CameraBinService(const QString &service, QObject *parent):
+ #endif
+ 
+ 
+-#ifdef Q_WS_MAEMO_6
++#if defined(Q_WS_MAEMO_6)
+         m_videoWindow = new QGstreamerVideoWindow(this, "omapxvsink");
+-        //m_videoWindow = new QGstreamerVideoWindow(this);
++#elif defined(Q_WS_MEEGO)
++        m_videoWindow = new QGstreamerVideoWindow(this);
+ #else
+         m_videoWindow = new QGstreamerVideoOverlay(this);
+ #endif
+diff --git a/src/multimedia/multimedia.pro b/src/multimedia/multimedia.pro
+index ecd83d4..cb02cfb 100644
+--- a/src/multimedia/multimedia.pro
++++ b/src/multimedia/multimedia.pro
+@@ -204,8 +204,11 @@ symbian {
+         DEFINES += QT_NO_OPENVG
+     }
+ }
++meego {
++    SOURCES += qgraphicsvideoitem_overlay.cpp
++}
+ 
+-!maemo*:!symbian {
++!meego:!maemo*:!symbian {
+     SOURCES += qgraphicsvideoitem.cpp
+ }
+ 
+-- 
+1.7.7.5 (Apple Git-26)
+

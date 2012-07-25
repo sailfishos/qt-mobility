@@ -1,36 +1,20 @@
 Name: qt-mobility
 Summary: APIs for mobile device functionality
-Version: 1.2.0
+Version: 1.2.0~git1962.g8c17475
 Release: 1
 Group: System/Libraries
 License: LGPLv2.1 with exception or GPLv3
 URL: http://qt.gitorious.org/qt-mobility
 Sources:
-    - http://get.qt.nokia.com/qt/add-ons/%{name}-opensource-src-%{version}.tar.gz
-SourcePrefix: "%{name}-opensource-src-%{version}"
+    - "%{name}-v1.2.0-1962-g8c17475.tar.bz2"
 Patches:
-    - revert_QTMOBILITY-614_bmc13087.patch
-    - no_rpath.patch
-    - enable_camerabin_with_meego_target.patch
-    - GL_CLAMP_TO_EDGE_for_video_texture.patch
-    - opengl-es2-shader-enable.patch
-    - ix86:revert-m_pools-in-qvideosurfacegstsink.patch
-    - ix86:libva-codec-enable.patch
-    - ix86:camera_preview_workaround.patch
-    - ix86:Moorestown_Camera_Support.patch
-    - arm:enable_xvoverlay_for_qml_camera.patch
-    - camera_api_added_functionality.patch
-    - qml_camera_example_added_functionality.patch
-    - versit_reverse_geolocation_lat_lon_order.patch
-    - versit_add_meego_vcard_entries.patch
-    - contacts_fix_schema_definitions.patch
-    - versit_urls_changed_to_uris.patch
-    - no-accel-crash-fix.patch
-    - contacts_use_eds_engine.patch
-    - sync-declarative-to-qt48-qobject.patch
-    - sync-macros-to-qt48.patch
-    - fix_compile_with_mkcal.patch
-    - fix_qml_contact_model.patch
+    - 0001-Enable-gstreamer-camerabin-backend.patch
+    - arm:0002-Use-xvoverlay-rendering-instead-of-gles2-painting.patch
+    - 0003-QtContacts-Add-missing-entries-to-schema-definition.patch
+    - 0004-Sync-macros-to-Qt-4.8.patch
+    - 0005-Revert-compile-on-MeeGo.patch
+    - 0006-Add-new-features-to-camera-API-for-camera-app-usage.patch
+    - 0007-Revert-Fix-source-incompatibility-error-caused-by-QM.patch
 
 Description: |
     Qt Mobility delivers a set of new APIs for mobile device functionality. These

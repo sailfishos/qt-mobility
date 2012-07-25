@@ -1,3 +1,40 @@
+* Thu Jul 26 2012 Robin Burchell <robin+mer@viroteck.net> - 1.2.0
+- Fixes MER#479: Qt Mobility needs an upgrade..
+  Update to a git snapshot, "officially" known as 1.2.2 upstream,
+  but they seem reluctant to actually tag anything.
+- versit_urls_changed_to_uris.patch dropped, applied upstream
+- versit_reverse_geolocation_lat_lon_order.patch dropped, applied upstream
+- versit_add_meego_vcard_entries.patch dropped, eds is dead
+- revert_QTMOBILITY-614_bmc13087.patch dropped, issue fixed upstream
+- no_rpath.patch dropped, no author info & no info why it is required
+- GL_CLAMP_TO_EDGE_for_video_texture.patch dropped, applied upstream
+- opengl-es2-shader-enable.patch dropped, applied upstream
+- revert-m_pools-in-qvideosurfacegstsink.patch dropped, no author info
+  & no info why it's required
+- libva-codec-enable.patch dropped, libva is commented out of configure
+- camera_preview_workaround.patch dropped, we don't support this hardware
+- Moorestown_Camera_Support.patch dropped, we don't support this hardware
+- qml_camera_example_added_functionality.patch dropped, pointless to maintain something
+  that only touches an example application
+- no-accel-crash-fix.patch dropped, applied upstream
+- contacts_use_eds_engine.patch dropped, eds is dead
+- sync-declarative-to-qt48-qobject.patch dropped, applied upstream
+- fix_qml_contact_model.patch dropped, fixed upstream
+- enable_camerabin_with_meego_target.patch forward-port & renamed to:
+  0001-Enable-gstreamer-camerabin-backend.patch
+- enable_xvoverlay_for_qml_camera.patch forward-port & renamed to:
+  0002-Use-xvoverlay-rendering-instead-of-gles2-painting.patch
+- contacts_fix_schema_definitions.patch forward-port & renamed to:
+  0003-QtContacts-Add-missing-entries-to-schema-definition.patch
+- sync-macros-to-qt48.patch forward-port & renamed to:
+  0004-Sync-macros-to-Qt-4.8.patch
+- fix_compile_with_mkcal.patch forward-port & renamed to:
+  0005-Revert-compile-on-MeeGo.patch
+- camera_api_added_functionality.patch forward-port & renamed to:
+  0006-Add-new-features-to-camera-API-for-camera-app-usage.patch
+- New patch 0007-Revert-Fix-source-incompatibility-error-caused-by-QM.patch
+  added to fix QMF SIC change, will be dropped when we update QMF
+
 * Mon Apr 02 2012 Marko Saukko <sage@merproject.org> - 1.2.0
 - Fixes MER#14: QtOrganizer Missing.
 

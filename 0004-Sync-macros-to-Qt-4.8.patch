@@ -1,0 +1,41 @@
+From 9120a44182d177ad610d2e74c5a7c66832bb0bf9 Mon Sep 17 00:00:00 2001
+From: Robin Burchell <robin+qt@viroteck.net>
+Date: Thu, 26 Jul 2012 14:06:47 +0200
+Subject: [PATCH 4/8] Sync macros to Qt 4.8
+
+---
+ src/bearer/qnetworkconfigmanager.cpp |    3 ++-
+ src/messaging/qmessageglobal.h       |    3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/bearer/qnetworkconfigmanager.cpp b/src/bearer/qnetworkconfigmanager.cpp
+index 57d69d1..159b6ef 100644
+--- a/src/bearer/qnetworkconfigmanager.cpp
++++ b/src/bearer/qnetworkconfigmanager.cpp
+@@ -68,7 +68,8 @@ QTM_BEGIN_NAMESPACE
+     }
+ #else
+ #define Q_GLOBAL_STATIC_QAPP_DESTRUCTION(TYPE, NAME)                    \
+-    Q_GLOBAL_STATIC_INIT(TYPE, NAME);                                   \
++    static QGlobalStatic<TYPE > this_##NAME                             \
++                = { Q_BASIC_ATOMIC_INITIALIZER(0), false };             \
+     static void NAME##_cleanup()                                        \
+     {                                                                   \
+         delete this_##NAME.pointer;                                     \
+diff --git a/src/messaging/qmessageglobal.h b/src/messaging/qmessageglobal.h
+index 512dbc9..933794a 100644
+--- a/src/messaging/qmessageglobal.h
++++ b/src/messaging/qmessageglobal.h
+@@ -59,7 +59,8 @@
+     }
+ #  else
+ #  define Q_SCOPED_STATIC_DEFINE(TYPE, SCOPE, NAME)                     \
+-    Q_GLOBAL_STATIC_INIT(TYPE, NAME);                                   \
++    static QGlobalStatic<TYPE > this_##NAME                             \
++                = { Q_BASIC_ATOMIC_INITIALIZER(0), false };             \
+     TYPE *SCOPE::NAME()                                                 \
+     {                                                                   \
+         if (!this_##NAME.pointer && !this_##NAME.destroyed) {           \
+-- 
+1.7.7.5 (Apple Git-26)
+
