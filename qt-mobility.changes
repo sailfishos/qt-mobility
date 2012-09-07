@@ -1,3 +1,7 @@
+* Fri Sep 07 2012 John Brooks <john.brooks@dereferenced.net> - 1.2.0
+- Added 0008-Use-xvideo-in-QGstreamerPlayerService.patch to improve video
+  performance
+
 * Thu Jul 26 2012 Robin Burchell <robin+mer@viroteck.net> - 1.2.0
 - Fixes MER#479: Qt Mobility needs an upgrade..
   Update to a git snapshot, "officially" known as 1.2.2 upstream,

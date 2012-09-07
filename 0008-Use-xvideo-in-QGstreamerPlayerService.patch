@@ -1,0 +1,32 @@
+From 957f9b463e4982577494b0186a3b0a4197aa1ce0 Mon Sep 17 00:00:00 2001
+From: John Brooks <john.brooks@dereferenced.net>
+Date: Fri, 31 Aug 2012 02:38:58 -0600
+Subject: [PATCH] Use xvideo in QGstreamerPlayerService
+
+XVideo performance is much better than overlay on N9xx, and is used
+for camerabin already.
+
+Signed-off-by: John Brooks <john.brooks@dereferenced.net>
+---
+ .../mediaplayer/qgstreamerplayerservice.cpp        |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/plugins/multimedia/gstreamer/mediaplayer/qgstreamerplayerservice.cpp b/plugins/multimedia/gstreamer/mediaplayer/qgstreamerplayerservice.cpp
+index f0b762c..9398757 100644
+--- a/plugins/multimedia/gstreamer/mediaplayer/qgstreamerplayerservice.cpp
++++ b/plugins/multimedia/gstreamer/mediaplayer/qgstreamerplayerservice.cpp
+@@ -82,8 +82,10 @@ QGstreamerPlayerService::QGstreamerPlayerService(QObject *parent):
+ 
+ #if defined(Q_WS_X11) && !defined(QT_NO_XVIDEO)
+ 
+-#ifdef Q_WS_MAEMO_6
++#if defined(Q_WS_MAEMO_6)
+     m_videoWindow = new QGstreamerVideoWindow(this, "omapxvsink");
++#elif defined(Q_WS_MEEGO)
++    m_videoWindow = new QGstreamerVideoWindow(this);
+ #else
+     m_videoWindow = new QGstreamerVideoOverlay(this);
+ #endif
+-- 
+1.7.9.5
+

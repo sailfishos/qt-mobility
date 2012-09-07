@@ -15,6 +15,7 @@ Patches:
     - 0005-Revert-compile-on-MeeGo.patch
     - 0006-Add-new-features-to-camera-API-for-camera-app-usage.patch
     - 0007-Revert-Fix-source-incompatibility-error-caused-by-QM.patch
+    - 0008-Use-xvideo-in-QGstreamerPlayerService.patch
 
 Description: |
     Qt Mobility delivers a set of new APIs for mobile device functionality. These
