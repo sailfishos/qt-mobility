@@ -1,3 +1,7 @@
+* Tue Sep 18 2012 Robin Burchell <robin+mer@viroteck.net> - 1.2.0
+- Drop 0007-Revert-Fix-source-incompatibility-error-caused-by-QM.patch to
+  allow a QMF upgrade.
+
 * Fri Sep 07 2012 John Brooks <john.brooks@dereferenced.net> - 1.2.0
 - Added 0008-Use-xvideo-in-QGstreamerPlayerService.patch to improve video
   performance
