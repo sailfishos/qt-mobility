@@ -1,3 +1,7 @@
+* Tue Oct 23 2012 Matthew Vogt <matthew.vogt@jollamobile.com> - 1.2.0
+- Added 0009-Improve-unique-device-ID-in-SDK.patch to yield better
+  unique device ID in SDK case.
+
 * Tue Sep 18 2012 Robin Burchell <robin+mer@viroteck.net> - 1.2.0
 - Drop 0007-Revert-Fix-source-incompatibility-error-caused-by-QM.patch to
   allow a QMF upgrade.
