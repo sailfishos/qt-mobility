@@ -1,3 +1,6 @@
+* Fri Oct 26 2012 Vesa-Matti Hartikainen <vesa-matti.hartikainen@jollamobile.com> - 1.2.0
+- Fixes MER#625: QML SoundEffect crash
+
 * Tue Oct 23 2012 Matthew Vogt <matthew.vogt@jollamobile.com> - 1.2.0
 - Added 0009-Improve-unique-device-ID-in-SDK.patch to yield better
   unique device ID in SDK case.

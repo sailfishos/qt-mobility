@@ -26,6 +26,7 @@ Patch4:     0005-Revert-compile-on-MeeGo.patch
 Patch5:     0006-Add-new-features-to-camera-API-for-camera-app-usage.patch
 Patch6:     0008-Use-xvideo-in-QGstreamerPlayerService.patch
 Patch7:     0009-Improve-unique-device-ID-in-SDK.patch
+Patch8:     0010-do-not-crash-on-failed-sample-playback.patch
 BuildRequires:  pkgconfig(QtGui)
 BuildRequires:  pkgconfig(QtOpenGL)
 BuildRequires:  pkgconfig(alsa)
@@ -479,6 +480,8 @@ This package contains Qt Mobility translations.
 %patch6 -p1
 # 0009-Improve-unique-device-ID-in-SDK.patch
 %patch7 -p1
+# 0010-do-not-crash-on-failed-sample-playback.patch
+%patch8 -p1
 # >> setup
 # << setup
 

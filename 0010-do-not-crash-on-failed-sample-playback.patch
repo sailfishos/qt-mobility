@@ -1,0 +1,30 @@
+From 2c709c7eeff0c723847f0329e1476818ddf11b3f Mon Sep 17 00:00:00 2001
+From: Vesa-Matti Hartikainen <vesa-matti.hartikainen@jollamobile.com>
+Date: Thu, 25 Oct 2012 17:58:27 +0300
+Subject: [PATCH] fix for MER#625
+
+Don't unref if operation did not succeed
+
+Signed-off-by: Vesa-Matti Hartikainen <vesa-matti.hartikainen@jollamobile.com>
+---
+ src/multimedia/effects/qsoundeffect_pulse_p.cpp |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/multimedia/effects/qsoundeffect_pulse_p.cpp b/src/multimedia/effects/qsoundeffect_pulse_p.cpp
+index c7e466d..ba8941d 100644
+--- a/src/multimedia/effects/qsoundeffect_pulse_p.cpp
++++ b/src/multimedia/effects/qsoundeffect_pulse_p.cpp
+@@ -699,7 +699,9 @@ void QSoundEffectPrivate::playSample()
+     qDebug() << this << "playSample";
+ #endif
+     Q_ASSERT(m_pulseStream);
+-    pa_operation_unref(pa_stream_cork(m_pulseStream, 0, 0, 0));
++    pa_operation *o = pa_stream_cork(m_pulseStream, 0, 0, 0);
++    if (o > 0)
++        pa_operation_unref(o);
+ }
+ 
+ void QSoundEffectPrivate::stop()
+-- 
+1.7.9.5
+
