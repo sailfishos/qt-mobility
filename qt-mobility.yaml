@@ -17,6 +17,7 @@ Patches:
     - 0008-Use-xvideo-in-QGstreamerPlayerService.patch
     - 0009-Improve-unique-device-ID-in-SDK.patch
     - 0010-do-not-crash-on-failed-sample-playback.patch
+    - 0011-Fix-query-syntax-for-PhotoAlbum-children.patch
 
 Description: |
     Qt Mobility delivers a set of new APIs for mobile device functionality. These

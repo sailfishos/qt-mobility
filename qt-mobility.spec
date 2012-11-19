@@ -27,6 +27,7 @@ Patch5:     0006-Add-new-features-to-camera-API-for-camera-app-usage.patch
 Patch6:     0008-Use-xvideo-in-QGstreamerPlayerService.patch
 Patch7:     0009-Improve-unique-device-ID-in-SDK.patch
 Patch8:     0010-do-not-crash-on-failed-sample-playback.patch
+Patch9:     0011-Fix-query-syntax-for-PhotoAlbum-children.patch
 BuildRequires:  pkgconfig(QtGui)
 BuildRequires:  pkgconfig(QtOpenGL)
 BuildRequires:  pkgconfig(alsa)
@@ -482,6 +483,8 @@ This package contains Qt Mobility translations.
 %patch7 -p1
 # 0010-do-not-crash-on-failed-sample-playback.patch
 %patch8 -p1
+# 0011-Fix-query-syntax-for-PhotoAlbum-children.patch
+%patch9 -p1
 # >> setup
 # << setup
 

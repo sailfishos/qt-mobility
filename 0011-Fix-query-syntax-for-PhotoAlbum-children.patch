@@ -1,0 +1,113 @@
+From 7b21bf5273af8a04e7afc3f585d906d6b2ddfa94 Mon Sep 17 00:00:00 2001
+From: Andrew den Exter <andrew.den.exter@jollamobile.com>
+Date: Fri, 16 Nov 2012 09:55:35 +1000
+Subject: [PATCH 11/11] Fix query syntax for PhotoAlbum children.
+
+The nie:isLogicalPartOf(?x) syntax won't match against an id, so this
+query would never return anything.  Instead return the contents
+of the list rather than relying on a connection that may never
+be established.
+
+The same query will also return the contents of a Playlist, support
+for which was mysteriously absent.
+
+Change-Id: Id448e06f8d183e064c8966b22d44414057a45f8a
+Reviewed-by: Christopher Adams <chris.adams@jollamobile.com>
+---
+ .../maemo6/qgallerytrackerchangenotifier.cpp       |    4 ++-
+ src/gallery/maemo6/qgallerytrackerschema.cpp       |   14 +++++----
+ .../tst_qgallerytrackerschema.cpp                  |   30 ++++++++++++++++++--
+ 3 files changed, 40 insertions(+), 8 deletions(-)
+
+diff --git a/src/gallery/maemo6/qgallerytrackerchangenotifier.cpp b/src/gallery/maemo6/qgallerytrackerchangenotifier.cpp
+index ba30168..e769c94 100644
+--- a/src/gallery/maemo6/qgallerytrackerchangenotifier.cpp
++++ b/src/gallery/maemo6/qgallerytrackerchangenotifier.cpp
+@@ -74,7 +74,9 @@ void QGalleryTrackerChangeNotifier::graphUpdated(
+     QString identifier(m_service);
+     identifier.replace(':','#');
+     if (className.endsWith(identifier)
+-            || (m_service == QLatin1String("nmm:Artist") && className.endsWith("nfo#Audio"))) {
++            || (m_service == QLatin1String("nmm:Artist") && className.endsWith("nfo#Audio"))
++            || (m_service == QLatin1String("nmm:Photo") && className.endsWith("nmm#ImageList"))
++            || (m_service == QLatin1String("nfo:Audio") && className.endsWith("nmm#Playlist"))) {
+         emit itemsChanged(QGalleryTrackerSchema::serviceUpdateId(m_service));
+     }
+ }
+diff --git a/src/gallery/maemo6/qgallerytrackerschema.cpp b/src/gallery/maemo6/qgallerytrackerschema.cpp
+index d8c42bc..af7b266 100644
+--- a/src/gallery/maemo6/qgallerytrackerschema.cpp
++++ b/src/gallery/maemo6/qgallerytrackerschema.cpp
+@@ -1242,12 +1242,16 @@ QDocumentGallery::Error QGalleryTrackerSchema::buildFilterQuery(
+                 } else {
+                     result = QDocumentGallery::ItemIdError;
+                 }
+-            } else if (itemTypes[index].itemType == QDocumentGallery::PhotoAlbum) {
+-                if (qt_galleryItemTypeList[m_itemIndex].itemType == QDocumentGallery::Image) {
+-                    filterStatement
+-                            = QLatin1String("nie:isLogicalPartOf(?x)=<")
++            } else if (itemTypes[index].itemType == QDocumentGallery::PhotoAlbum
++                       || itemTypes[index].itemType == QDocumentGallery::Playlist) {
++                if ((qt_galleryItemTypeList[m_itemIndex].itemType == QDocumentGallery::Image
++                        && itemTypes[index].itemType == QDocumentGallery::PhotoAlbum)
++                        || (qt_galleryItemTypeList[m_itemIndex].itemType == QDocumentGallery::Audio
++                        && itemTypes[index].itemType == QDocumentGallery::Playlist)) {
++                    rootItemStatement = QLatin1String("{<")
+                             + itemTypes[index].prefix.strip(rootItemId).toString()
+-                            + QLatin1String(">");
++                            + QLatin1String("> nfo:hasMediaFileListEntry ?entry}");
++                    filterStatement = QLatin1String("nie:url(?x) = nfo:entryUrl(?entry)");
+                 } else {
+                     result = QDocumentGallery::ItemIdError;
+                 }
+diff --git a/tests/auto/qgallerytrackerschema_maemo6/tst_qgallerytrackerschema.cpp b/tests/auto/qgallerytrackerschema_maemo6/tst_qgallerytrackerschema.cpp
+index 29840e5..c4384f0 100644
+--- a/tests/auto/qgallerytrackerschema_maemo6/tst_qgallerytrackerschema.cpp
++++ b/tests/auto/qgallerytrackerschema_maemo6/tst_qgallerytrackerschema.cpp
+@@ -1563,7 +1563,8 @@ void tst_QGalleryTrackerSchema::queryResponseRootItem_data()
+             <<  "SELECT ?x nie:url(?x) rdf:type(?x) "
+                 "WHERE {"
+                     "{?x rdf:type nmm:Photo}"
+-                    "FILTER(nie:isLogicalPartOf(?x)=<photoAlbum:Camping>)"
++                    "{<photoAlbum:Camping> nfo:hasMediaFileListEntry ?entry}"
++                    "FILTER(nie:url(?x) = nfo:entryUrl(?entry))"
+                 "} "
+                 "GROUP BY ?x";
+ 
+@@ -1574,7 +1575,32 @@ void tst_QGalleryTrackerSchema::queryResponseRootItem_data()
+             <<  "SELECT ?x nie:url(?x) rdf:type(?x) "
+                 "WHERE {"
+                     "{?x rdf:type nmm:Photo}"
+-                    "FILTER(nie:isLogicalPartOf(?x)=<photoAlbum:Camping>)"
++                    "{<photoAlbum:Camping> nfo:hasMediaFileListEntry ?entry}"
++                    "FILTER(nie:url(?x) = nfo:entryUrl(?entry))"
++                "} "
++                "GROUP BY ?x";
++
++    QTest::newRow("Playlist, All Image Descendants")
++            << QString::fromLatin1("Audio")
++            << QString::fromLatin1("playlist::playlist:mix")
++            << QGalleryQueryRequest::AllDescendants
++            <<  "SELECT ?x nie:url(?x) rdf:type(?x) "
++                "WHERE {"
++                    "{?x rdf:type nfo:Audio}"
++                    "{<playlist:mix> nfo:hasMediaFileListEntry ?entry}"
++                    "FILTER(nie:url(?x) = nfo:entryUrl(?entry))"
++                "} "
++                "GROUP BY ?x";
++
++    QTest::newRow("Playlist, Direct Audio Descendants")
++            << QString::fromLatin1("Audio")
++            << QString::fromLatin1("playlist::playlist:mix")
++            << QGalleryQueryRequest::DirectDescendants
++            <<  "SELECT ?x nie:url(?x) rdf:type(?x) "
++                "WHERE {"
++                    "{?x rdf:type nfo:Audio}"
++                    "{<playlist:mix> nfo:hasMediaFileListEntry ?entry}"
++                    "FILTER(nie:url(?x) = nfo:entryUrl(?entry))"
+                 "} "
+                 "GROUP BY ?x";
+ 
+-- 
+1.7.10.4
+
