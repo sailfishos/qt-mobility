@@ -1,4 +1,4 @@
-* Mon Nov 19 2012 Andrew den Exter <andrew.den.exter@jollamobile.com> - 1.20
+* Mon Nov 19 2012 Andrew den Exter <andrew.den.exter@jollamobile.com> - 1.2.0
 - Added 0011-Fix-query-syntax-for-PhotoAlbum-children.patch to fix
   Document Gallery not returning images belonging to a photo album.
 
