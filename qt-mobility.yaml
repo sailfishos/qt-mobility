@@ -18,6 +18,11 @@ Patches:
     - 0009-Improve-unique-device-ID-in-SDK.patch
     - 0010-do-not-crash-on-failed-sample-playback.patch
     - 0011-Fix-query-syntax-for-PhotoAlbum-children.patch
+    - 0001-Enable-resource-policy-integration-for-media-player-.patch
+    - 0001-Enable-resource-policy-integration-for-camerabin-plu.patch
+    - 0001-Add-libresourceqt1-to-PKGCONFIG-when-building-for-Me.patch
+    - 0001-Allow-playback-if-resource-manager-is-not-available.patch
+    - 0002-Allow-camera-use-if-resource-manager-is-not-availabl.patch
 
 Description: |
     Qt Mobility delivers a set of new APIs for mobile device functionality. These
@@ -44,6 +49,7 @@ PkgConfigBR:
     - xrandr
     - xrender
     - xv
+    - libresourceqt1
 PkgBR:
     - qt-devel-tools
 # Used for generating build indices on build time

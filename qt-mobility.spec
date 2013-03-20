@@ -28,6 +28,11 @@ Patch6:     0008-Use-xvideo-in-QGstreamerPlayerService.patch
 Patch7:     0009-Improve-unique-device-ID-in-SDK.patch
 Patch8:     0010-do-not-crash-on-failed-sample-playback.patch
 Patch9:     0011-Fix-query-syntax-for-PhotoAlbum-children.patch
+Patch10:     0001-Enable-resource-policy-integration-for-media-player-.patch
+Patch11:     0001-Enable-resource-policy-integration-for-camerabin-plu.patch
+Patch12:     0001-Add-libresourceqt1-to-PKGCONFIG-when-building-for-Me.patch
+Patch13:     0001-Allow-playback-if-resource-manager-is-not-available.patch
+Patch14:     0002-Allow-camera-use-if-resource-manager-is-not-availabl.patch
 BuildRequires:  pkgconfig(QtGui)
 BuildRequires:  pkgconfig(QtOpenGL)
 BuildRequires:  pkgconfig(alsa)
@@ -48,6 +53,7 @@ BuildRequires:  pkgconfig(xext)
 BuildRequires:  pkgconfig(xrandr)
 BuildRequires:  pkgconfig(xrender)
 BuildRequires:  pkgconfig(xv)
+BuildRequires:  pkgconfig(libresourceqt1)
 BuildRequires:  qt-devel-tools
 BuildRequires:  gdb
 BuildRequires:  fdupes
@@ -485,6 +491,16 @@ This package contains Qt Mobility translations.
 %patch8 -p1
 # 0011-Fix-query-syntax-for-PhotoAlbum-children.patch
 %patch9 -p1
+# 0001-Enable-resource-policy-integration-for-media-player-.patch
+%patch10 -p1
+# 0001-Enable-resource-policy-integration-for-camerabin-plu.patch
+%patch11 -p1
+# 0001-Add-libresourceqt1-to-PKGCONFIG-when-building-for-Me.patch
+%patch12 -p1
+# 0001-Allow-playback-if-resource-manager-is-not-available.patch
+%patch13 -p1
+# 0002-Allow-camera-use-if-resource-manager-is-not-availabl.patch
+%patch14 -p1
 # >> setup
 # << setup
 

@@ -1,3 +1,12 @@
+* Wed Mar 20 2013 Juho Hämäläinen <juho.hamalainen@tieto.com> - 1.2.0
+- Add 0001-Enable-resource-policy-integration-for-camerabin-plu.patch
+- Add 0001-Enable-resource-policy-integration-for-media-player-.patch
+- Add 0001-Add-libresourceqt1-to-PKGCONFIG-when-building-for-Me.patch
+- Enable resource policy integration.
+- Add 0001-Allow-playback-if-resource-manager-is-not-available.patch
+- Add 0002-Allow-camera-use-if-resource-manager-is-not-availabl.patch
+- Allows mediaplayer and camerabin to function without ohm resource manager.
+
 * Mon Nov 19 2012 Andrew den Exter <andrew.den.exter@jollamobile.com> - 1.2.0
 - Added 0011-Fix-query-syntax-for-PhotoAlbum-children.patch to fix
   Document Gallery not returning images belonging to a photo album.

@@ -1,0 +1,26 @@
+From f25089ff37b4d157e696fac211a6d9279ef07449 Mon Sep 17 00:00:00 2001
+From: Mohammed Hassan <mohammed.hassan@jollamobile.com>
+Date: Sat, 1 Dec 2012 05:21:14 +0200
+Subject: [PATCH] Enable resource policy integration for camerabin plugin when
+ building for MeeGo
+
+---
+ plugins/multimedia/gstreamer/camerabin/camerabinresourcepolicy.cpp |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins/multimedia/gstreamer/camerabin/camerabinresourcepolicy.cpp b/plugins/multimedia/gstreamer/camerabin/camerabinresourcepolicy.cpp
+index 0c0bba9..6b7b5f7 100644
+--- a/plugins/multimedia/gstreamer/camerabin/camerabinresourcepolicy.cpp
++++ b/plugins/multimedia/gstreamer/camerabin/camerabinresourcepolicy.cpp
+@@ -41,7 +41,7 @@
+ 
+ #include "camerabinresourcepolicy.h"
+ 
+-#ifdef Q_WS_MAEMO_6
++#if defined(Q_WS_MAEMO_6) || defined(Q_WS_MEEGO)
+ #define HAVE_RESOURCE_POLICY
+ #endif
+ 
+-- 
+1.7.10.4
+

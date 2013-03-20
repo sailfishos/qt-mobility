@@ -1,0 +1,125 @@
+From 7fdb36aa1de873104587be18cbae659c84e7fe63 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Juho=20H=C3=A4m=C3=A4l=C3=A4inen?= <juho.hamalainen@tieto.com>
+Date: Tue, 19 Mar 2013 14:13:31 +0200
+Subject: [PATCH 2/3] Allow camera use if resource manager is not available.
+
+If camerabin is used in environment which doesn't have
+running policy resource manager, camera is effectively
+useless since it never is granted resource.
+This patch changes functionality so that if resource
+policy manager is not available in D-Bus bus, all
+resources are unconditionally granted.
+---
+ .../camerabin/camerabinresourcepolicy.cpp          |   52 ++++++++++++++++++++
+ .../gstreamer/camerabin/camerabinresourcepolicy.h  |    3 ++
+ 2 files changed, 55 insertions(+)
+
+diff --git a/plugins/multimedia/gstreamer/camerabin/camerabinresourcepolicy.cpp b/plugins/multimedia/gstreamer/camerabin/camerabinresourcepolicy.cpp
+index 6b7b5f7..cfc494d 100644
+--- a/plugins/multimedia/gstreamer/camerabin/camerabinresourcepolicy.cpp
++++ b/plugins/multimedia/gstreamer/camerabin/camerabinresourcepolicy.cpp
+@@ -55,8 +55,11 @@
+ #include <policy/resource-set.h>
+ #endif
+ 
++#include <QString>
++
+ CamerabinResourcePolicy::CamerabinResourcePolicy(QObject *parent) :
+     QObject(parent),
++    m_errorState(false),
+     m_resourceSet(NoResources),
+     m_releasingResources(false)
+ {
+@@ -66,6 +69,11 @@ CamerabinResourcePolicy::CamerabinResourcePolicy(QObject *parent) :
+     m_resource->setAlwaysReply();
+     m_resource->initAndConnect();
+ 
++    connect(m_resource, SIGNAL(managerIsUp()),
++            this, SLOT(handleManagerIsUp()));
++    connect(m_resource, SIGNAL(errorCallback(quint32, const char*)),
++            this, SLOT(handleError(quint32, const char*)));
++
+     connect(m_resource, SIGNAL(resourcesGranted(const QList<ResourcePolicy::ResourceType>)),
+             SIGNAL(resourcesGranted()));
+     connect(m_resource, SIGNAL(resourcesDenied()), SIGNAL(resourcesDenied()));
+@@ -197,6 +205,11 @@ void CamerabinResourcePolicy::setResourceSet(CamerabinResourcePolicy::ResourceSe
+         m_resource->addResourceObject(resource);
+     }
+ 
++    if (m_errorState) {
++        emit resourcesGranted();
++        return;
++    }
++
+     m_resource->update();
+     if (set != NoResources) {
+         m_resource->acquire();
+@@ -211,6 +224,12 @@ void CamerabinResourcePolicy::setResourceSet(CamerabinResourcePolicy::ResourceSe
+ 
+ bool CamerabinResourcePolicy::isResourcesGranted() const
+ {
++    // If connection to resource manager is broken resources are always granted
++    // if there are any requested for.
++    if (m_errorState) {
++        return m_resourceSet != NoResources;
++    }
++
+ #ifdef HAVE_RESOURCE_POLICY
+     foreach (ResourcePolicy::Resource *resource, m_resource->resources())
+         if (!resource->isOptional() && !resource->isGranted())
+@@ -228,3 +247,36 @@ void CamerabinResourcePolicy::handleResourcesReleased()
+     m_releasingResources = false;
+ #endif
+ }
++
++void CamerabinResourcePolicy::handleError(quint32 error, const char *error_msg)
++{
++#ifdef HAVE_RESOURCE_POLICY
++    if (error_msg) {
++        QString str = QString::fromAscii(error_msg);
++
++        if (str == "DBus.Error.ServiceUnknown") {
++            // Resource manager is not running or cannot connect to it.
++            m_errorState = true;
++        }
++    }
++#endif
++}
++
++void CamerabinResourcePolicy::handleManagerIsUp()
++{
++#ifdef HAVE_RESOURCE_POLICY
++
++#ifdef DEBUG_RESOURCE_POLICY
++    qDebug() << Q_FUNC_INFO << "Connected to Manager";
++#endif
++
++    bool oldErrorState = m_errorState;
++    m_errorState = false;
++
++    // If state was previously in error and user has requested resources already,
++    // try to acquire them now for real.
++    if (oldErrorState && m_resourceSet != NoResources) {
++        m_resource->acquire();
++    }
++#endif
++}
+diff --git a/plugins/multimedia/gstreamer/camerabin/camerabinresourcepolicy.h b/plugins/multimedia/gstreamer/camerabin/camerabinresourcepolicy.h
+index 32f4901..33a4aae 100644
+--- a/plugins/multimedia/gstreamer/camerabin/camerabinresourcepolicy.h
++++ b/plugins/multimedia/gstreamer/camerabin/camerabinresourcepolicy.h
+@@ -75,8 +75,11 @@ Q_SIGNALS:
+ 
+ private Q_SLOTS:
+     void handleResourcesReleased();
++    void handleError(quint32 error, const char *error_msg);
++    void handleManagerIsUp();
+ 
+ private:
++    bool m_errorState;
+     ResourceSet m_resourceSet;
+     ResourcePolicy::ResourceSet *m_resource;
+     bool m_releasingResources;
+-- 
+1.7.10.4
+

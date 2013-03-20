@@ -1,0 +1,26 @@
+From c5d791bc0d68a3bf9356c489b14b08d9a54473aa Mon Sep 17 00:00:00 2001
+From: Mohammed Hassan <mohammed.hassan@jollamobile.com>
+Date: Sat, 1 Dec 2012 05:15:45 +0200
+Subject: [PATCH] Enable resource policy integration for media player plugin
+ on meego
+
+---
+ plugins/multimedia/gstreamer/mediaplayer/playerresourcepolicy.cpp |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins/multimedia/gstreamer/mediaplayer/playerresourcepolicy.cpp b/plugins/multimedia/gstreamer/mediaplayer/playerresourcepolicy.cpp
+index 47fd658..6d71319 100644
+--- a/plugins/multimedia/gstreamer/mediaplayer/playerresourcepolicy.cpp
++++ b/plugins/multimedia/gstreamer/mediaplayer/playerresourcepolicy.cpp
+@@ -41,7 +41,7 @@
+ 
+ #include "playerresourcepolicy.h"
+ 
+-#ifdef Q_WS_MAEMO_6
++#if defined(Q_WS_MAEMO_6) || defined(Q_WS_MEEGO)
+ #define HAVE_RESOURCE_POLICY
+ #endif
+ 
+-- 
+1.7.10.4
+
