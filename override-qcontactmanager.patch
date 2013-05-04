@@ -1,0 +1,97 @@
+From 47079b33a0c1b5fe2301bb527cca12df13f3b1d6 Mon Sep 17 00:00:00 2001
+From: Chris Adams <chris.adams@jollamobile.com>
+Date: Wed, 1 May 2013 11:14:59 +1000
+Subject: [PATCH] Allow overriding default QContactManagerEngine via env var
+
+This patch adds support for overriding the default
+QContactManagerEngine via the QTCONTACTS_MANAGER_OVERRIDE environment
+variable.
+
+Change-Id: Ia4807269fd43f6f7e4c2f13b943da5ee6f9cb38c
+Reviewed-by: Matthew Vogt <matthew.vogt@qinetic.com.au>
+Reviewed-by: Robin Burchell <robin+qt@viroteck.net>
+Reviewed-by: Lorn Potter <lorn.potter@jollamobile.com>
+---
+ src/contacts/qcontactmanager.cpp                   |   11 +++++++
+ .../unittest/tst_qcontactmanagerplugins.cpp        |   30 ++++++++++++++++++++
+ 2 files changed, 41 insertions(+), 0 deletions(-)
+
+diff --git a/src/contacts/qcontactmanager.cpp b/src/contacts/qcontactmanager.cpp
+index a704333..9fd812c 100644
+--- a/src/contacts/qcontactmanager.cpp
++++ b/src/contacts/qcontactmanager.cpp
+@@ -132,6 +132,10 @@ QTM_BEGIN_NAMESPACE
+     Returns a list of available manager ids that can be used when constructing
+     a QContactManager.  If an empty id is specified to the constructor, the
+     first value in this list will be used instead.
++
++    The QTCONTACTS_MANAGER_OVERRIDE environment variable may be set to
++    override the default engine.
++
+     \since 1.0
+   */
+ QStringList QContactManager::availableManagers()
+@@ -151,6 +155,13 @@ QStringList QContactManager::availableManagers()
+     }
+ #endif
+ 
++    // and prefer the override engine if specified in the environment
++    QString overrideManagerName = qgetenv("QTCONTACTS_MANAGER_OVERRIDE");
++    if (!overrideManagerName.isEmpty() && ret.contains(overrideManagerName)) {
++        ret.removeAll(overrideManagerName);
++        ret.prepend(overrideManagerName);
++    }
++
+     return ret;
+ }
+ 
+diff --git a/tests/auto/qcontactmanagerplugins/unittest/tst_qcontactmanagerplugins.cpp b/tests/auto/qcontactmanagerplugins/unittest/tst_qcontactmanagerplugins.cpp
+index f3c42b1..480879f 100644
+--- a/tests/auto/qcontactmanagerplugins/unittest/tst_qcontactmanagerplugins.cpp
++++ b/tests/auto/qcontactmanagerplugins/unittest/tst_qcontactmanagerplugins.cpp
+@@ -64,6 +64,7 @@ public slots:
+     void cleanup();
+ private slots:
+     void testDummy();
++    void testOverride();
+ };
+ 
+ /* Test a static factory as well */
+@@ -189,5 +190,34 @@ void tst_QContactManagerPlugins::testDummy()
+     QVERIFY(m2.managerName() == "testdummy");
+ }
+ 
++#define makestr(x) (#x)
++#define makename(x) makestr(x)
++void tst_QContactManagerPlugins::testOverride()
++{
++    // build time default
++#if defined(Q_CONTACTS_DEFAULT_ENGINE)
++    QString platformDefaultManager = QLatin1String(makename(Q_CONTACTS_DEFAULT_ENGINE));
++#else
++    QString platformDefaultManager = QLatin1String("memory");
++#endif
++
++    // environment override
++    QString overrideManager = qgetenv("QTCONTACTS_MANAGER_OVERRIDE");
++
++    // override with specific managers
++    qputenv("QTCONTACTS_MANAGER_OVERRIDE", "memory");
++    QContactManager m1;
++    QVERIFY(m1.managerName() == "memory");
++    qputenv("QTCONTACTS_MANAGER_OVERRIDE", "testdummy");
++    QContactManager m2;
++    QVERIFY(m2.managerName() == "testdummy");
++    qputenv("QTCONTACTS_MANAGER_OVERRIDE", "");
++    QContactManager m3;
++    QVERIFY(m3.managerName() == platformDefaultManager);
++    qputenv("QTCONTACTS_MANAGER_OVERRIDE", overrideManager.toLatin1());
++}
++#undef makename
++#undef makestr
++
+ QTEST_MAIN(tst_QContactManagerPlugins)
+ #include "tst_qcontactmanagerplugins.moc"
+-- 
+1.7.1
+

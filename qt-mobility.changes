@@ -1,3 +1,6 @@
+* Sat May 04 2013 Carsten Munk <carsten.munk@jollamobile.com> - 1.2.0
+- Add ability to override QContactManagerEngine through environment variable
+
 * Wed Mar 20 2013 Juho Hämäläinen <juho.hamalainen@tieto.com> - 1.2.0
 - Add 0001-Enable-resource-policy-integration-for-camerabin-plu.patch
 - Add 0001-Enable-resource-policy-integration-for-media-player-.patch

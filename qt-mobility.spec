@@ -33,6 +33,7 @@ Patch11:     0001-Enable-resource-policy-integration-for-camerabin-plu.patch
 Patch12:     0001-Add-libresourceqt1-to-PKGCONFIG-when-building-for-Me.patch
 Patch13:     0001-Allow-playback-if-resource-manager-is-not-available.patch
 Patch14:     0002-Allow-camera-use-if-resource-manager-is-not-availabl.patch
+Patch15:     override-qcontactmanager.patch
 BuildRequires:  pkgconfig(QtGui)
 BuildRequires:  pkgconfig(QtOpenGL)
 BuildRequires:  pkgconfig(alsa)
@@ -501,6 +502,8 @@ This package contains Qt Mobility translations.
 %patch13 -p1
 # 0002-Allow-camera-use-if-resource-manager-is-not-availabl.patch
 %patch14 -p1
+# override-qcontactmanager.patch
+%patch15 -p1
 # >> setup
 # << setup
 
