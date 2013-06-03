@@ -227,7 +227,6 @@ SubPackages:
           This package contains the Sensors API. It provides access to sensors.
       Requires:
           - libqtsql4-sqlite
-          - sensorfw
 
     - Name: libqtserviceframework1
       AsWholeName: yes

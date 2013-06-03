@@ -210,7 +210,6 @@ change notifications.
 Summary:    Qt Mobility Sensors module
 Group:      System/Libraries
 Requires:   libqtsql4-sqlite
-Requires:   sensorfw
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -466,7 +465,6 @@ Qt Mobility delivers a set of new APIs for mobile device functionality.
 This package contains Qt Mobility translations.
 
 
-
 %prep
 %setup -q -n %{name}
 
@@ -616,6 +614,7 @@ find %{buildroot}%{_libdir}/qtmobility -type f -perm /u+x,g+x,o+x \( -false \
 %post -n libqtversitorganizer1 -p /sbin/ldconfig
 
 %postun -n libqtversitorganizer1 -p /sbin/ldconfig
+
 
 %files devel
 %defattr(-,root,root,-)

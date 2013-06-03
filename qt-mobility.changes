@@ -1,3 +1,6 @@
+* Mon Jun 03 2013 Juha Kallioinen <juha.kallioinen@jollamobile.com> - 1.2.0
+- Drop explicit sensorfw requires from libqtsensors1 package
+
 * Sat May 04 2013 Carsten Munk <carsten.munk@jollamobile.com> - 1.2.0
 - Add ability to override QContactManagerEngine through environment variable
 
