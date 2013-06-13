@@ -1,3 +1,7 @@
+* Thu Jun 13 2013 Juha Kallioinen <juha.kallioinen@jollamobile.com> - 1.2.0
+- Applies the default CFLAGS/CXXFLAGS set by rpm for the build
+- Reformatted the patches from github
+
 * Mon Jun 03 2013 Juha Kallioinen <juha.kallioinen@jollamobile.com> - 1.2.0
 - Drop explicit sensorfw requires from libqtsensors1 package
 

@@ -1,3 +1,19 @@
+From 5cc29564fe8a757866130366c6109f7c42fe7638 Mon Sep 17 00:00:00 2001
+From: Matthew Vogt <matthew.vogt@jollamobile.com>
+Date: Tue, 8 Jan 2013 15:42:58 +1100
+Subject: [PATCH 08/18] Improve QSystemDeviceInfo::uniqueDeviceID value
+
+For non-specific linux variants, if DBUS is present prefer to return
+the exported localMachineId value.  Otherwise fallback to a random but
+persistent UUID value, which is more likely to be unique than the result
+of gethostid().
+
+Change-Id: I728fd24087caae3ff95693c224887bbcc03e7484
+Signed-off-by: Matthew Vogt <matthew.vogt@jollamobile.com>
+---
+ src/systeminfo/linux/qsysteminfo_linux_common.cpp |   31 +++++++++++++--------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
+
 diff --git a/src/systeminfo/linux/qsysteminfo_linux_common.cpp b/src/systeminfo/linux/qsysteminfo_linux_common.cpp
 index e8aa6f8..c36b1ca 100644
 --- a/src/systeminfo/linux/qsysteminfo_linux_common.cpp
@@ -48,4 +64,7 @@ index e8aa6f8..c36b1ca 100644
 +
      return hash.result().toHex();
  }
+ 
+-- 
+1.7.10.3
 

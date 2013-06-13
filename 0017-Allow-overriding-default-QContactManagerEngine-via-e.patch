@@ -1,7 +1,8 @@
-From 47079b33a0c1b5fe2301bb527cca12df13f3b1d6 Mon Sep 17 00:00:00 2001
+From 2a5283b548345d65830fb56d882db7846708993f Mon Sep 17 00:00:00 2001
 From: Chris Adams <chris.adams@jollamobile.com>
 Date: Wed, 1 May 2013 11:14:59 +1000
-Subject: [PATCH] Allow overriding default QContactManagerEngine via env var
+Subject: [PATCH 17/18] Allow overriding default QContactManagerEngine via env
+ var
 
 This patch adds support for overriding the default
 QContactManagerEngine via the QTCONTACTS_MANAGER_OVERRIDE environment
@@ -14,10 +15,10 @@ Reviewed-by: Lorn Potter <lorn.potter@jollamobile.com>
 ---
  src/contacts/qcontactmanager.cpp                   |   11 +++++++
  .../unittest/tst_qcontactmanagerplugins.cpp        |   30 ++++++++++++++++++++
- 2 files changed, 41 insertions(+), 0 deletions(-)
+ 2 files changed, 41 insertions(+)
 
 diff --git a/src/contacts/qcontactmanager.cpp b/src/contacts/qcontactmanager.cpp
-index a704333..9fd812c 100644
+index 752e7bf..7e79f7d 100644
 --- a/src/contacts/qcontactmanager.cpp
 +++ b/src/contacts/qcontactmanager.cpp
 @@ -132,6 +132,10 @@ QTM_BEGIN_NAMESPACE
@@ -46,7 +47,7 @@ index a704333..9fd812c 100644
  }
  
 diff --git a/tests/auto/qcontactmanagerplugins/unittest/tst_qcontactmanagerplugins.cpp b/tests/auto/qcontactmanagerplugins/unittest/tst_qcontactmanagerplugins.cpp
-index f3c42b1..480879f 100644
+index 3ce9039..e665a44 100644
 --- a/tests/auto/qcontactmanagerplugins/unittest/tst_qcontactmanagerplugins.cpp
 +++ b/tests/auto/qcontactmanagerplugins/unittest/tst_qcontactmanagerplugins.cpp
 @@ -64,6 +64,7 @@ public slots:
@@ -93,5 +94,5 @@ index f3c42b1..480879f 100644
  QTEST_MAIN(tst_QContactManagerPlugins)
  #include "tst_qcontactmanagerplugins.moc"
 -- 
-1.7.1
+1.7.10.3
 

@@ -1,8 +1,8 @@
-From c5d791bc0d68a3bf9356c489b14b08d9a54473aa Mon Sep 17 00:00:00 2001
+From 0ffd4f11350bef694cbf0214ae5030446bcfc552 Mon Sep 17 00:00:00 2001
 From: Mohammed Hassan <mohammed.hassan@jollamobile.com>
 Date: Sat, 1 Dec 2012 05:15:45 +0200
-Subject: [PATCH] Enable resource policy integration for media player plugin
- on meego
+Subject: [PATCH 12/18] Enable resource policy integration for media player
+ plugin on meego
 
 ---
  plugins/multimedia/gstreamer/mediaplayer/playerresourcepolicy.cpp |    2 +-
@@ -22,5 +22,5 @@ index 47fd658..6d71319 100644
  #endif
  
 -- 
-1.7.10.4
+1.7.10.3
 

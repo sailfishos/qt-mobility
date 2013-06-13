@@ -1,7 +1,7 @@
-From 7fdb36aa1de873104587be18cbae659c84e7fe63 Mon Sep 17 00:00:00 2001
+From 606075d0b3614a94866eb4343c46d06b5029c987 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Juho=20H=C3=A4m=C3=A4l=C3=A4inen?= <juho.hamalainen@tieto.com>
 Date: Tue, 19 Mar 2013 14:13:31 +0200
-Subject: [PATCH 2/3] Allow camera use if resource manager is not available.
+Subject: [PATCH 16/18] Allow camera use if resource manager is not available.
 
 If camerabin is used in environment which doesn't have
 running policy resource manager, camera is effectively
@@ -121,5 +121,5 @@ index 32f4901..33a4aae 100644
      ResourcePolicy::ResourceSet *m_resource;
      bool m_releasingResources;
 -- 
-1.7.10.4
+1.7.10.3
 

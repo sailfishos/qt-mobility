@@ -1,14 +1,15 @@
-From 0ac80d1643b253c3c8b1466d76cc4f4f9a8bbcc6 Mon Sep 17 00:00:00 2001
+From 42f0e65be2b305f817ca8b93369d1af6829075c8 Mon Sep 17 00:00:00 2001
 From: Mohammed Hassan <mohammed.hassan@jollamobile.com>
 Date: Sat, 1 Dec 2012 06:17:10 +0200
-Subject: [PATCH] Add libresourceqt1 to PKGCONFIG when building for MeeGo
+Subject: [PATCH 14/18] Add libresourceqt1 to PKGCONFIG when building for
+ MeeGo
 
 ---
  plugins/multimedia/gstreamer/gstreamer.pro |    4 ++++
  1 file changed, 4 insertions(+)
 
 diff --git a/plugins/multimedia/gstreamer/gstreamer.pro b/plugins/multimedia/gstreamer/gstreamer.pro
-index dcd18c2..187accf 100644
+index bbd59a0..d3c7661 100644
 --- a/plugins/multimedia/gstreamer/gstreamer.pro
 +++ b/plugins/multimedia/gstreamer/gstreamer.pro
 @@ -38,6 +38,10 @@ maemo5 {
@@ -23,5 +24,5 @@ index dcd18c2..187accf 100644
      HEADERS += camerabuttonlistener_meego.h
      SOURCES += camerabuttonlistener_meego.cpp
 -- 
-1.7.10.4
+1.7.10.3
 

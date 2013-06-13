@@ -1,0 +1,42 @@
+From 345dd7f82fc89de5977d6110f6abd5563d99ab3e Mon Sep 17 00:00:00 2001
+From: Chris Adams <chris.adams@jollamobile.com>
+Date: Wed, 19 Dec 2012 13:53:12 +1000
+Subject: [PATCH 11/18] Fix QDeclarativeHapticsEffect::setIntensity()
+
+Previously, the value of the intensity was never modified by
+setIntensity().  This commit ensures that the result of the value
+comparison is used correctly to determine whether or not to update
+the intensity to the new value.
+
+Task-number: QTMOBILITY-2084
+Change-Id: I53a0ab027c10b0be70761fbac71c5bd2ad4cec7a
+---
+ plugins/declarative/feedback/qdeclarativehapticseffect.cpp |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/plugins/declarative/feedback/qdeclarativehapticseffect.cpp b/plugins/declarative/feedback/qdeclarativehapticseffect.cpp
+index 8c29466..ebdc337 100644
+--- a/plugins/declarative/feedback/qdeclarativehapticseffect.cpp
++++ b/plugins/declarative/feedback/qdeclarativehapticseffect.cpp
+@@ -40,6 +40,7 @@
+ ****************************************************************************/
+ 
+ #include "qdeclarativehapticseffect_p.h"
++
+ /*!
+     \qmlclass HapticsEffect
+     \brief The HapticsEffect element represents a custom haptic feedback effect.
+@@ -94,7 +95,9 @@ int QDeclarativeHapticsEffect::duration() const
+     */
+ void QDeclarativeHapticsEffect::setIntensity(qreal intensity)
+ {
+-    if (qFuzzyCompare(intensity, d->intensity())) {
++    qreal newIntensity = intensity + 1.0;
++    qreal oldIntensity = d->intensity() + 1.0;
++    if (!qFuzzyCompare(newIntensity, oldIntensity)) {
+         d->setIntensity(intensity);
+         emit intensityChanged();
+     }
+-- 
+1.7.10.3
+

@@ -1,8 +1,8 @@
-From f25089ff37b4d157e696fac211a6d9279ef07449 Mon Sep 17 00:00:00 2001
+From 30ce743a937f552f2395356ee76d9e07930a4187 Mon Sep 17 00:00:00 2001
 From: Mohammed Hassan <mohammed.hassan@jollamobile.com>
 Date: Sat, 1 Dec 2012 05:21:14 +0200
-Subject: [PATCH] Enable resource policy integration for camerabin plugin when
- building for MeeGo
+Subject: [PATCH 13/18] Enable resource policy integration for camerabin
+ plugin when building for MeeGo
 
 ---
  plugins/multimedia/gstreamer/camerabin/camerabinresourcepolicy.cpp |    2 +-
@@ -22,5 +22,5 @@ index 0c0bba9..6b7b5f7 100644
  #endif
  
 -- 
-1.7.10.4
+1.7.10.3
 

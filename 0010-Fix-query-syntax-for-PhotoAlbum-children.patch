@@ -1,7 +1,7 @@
-From 7b21bf5273af8a04e7afc3f585d906d6b2ddfa94 Mon Sep 17 00:00:00 2001
+From c473e738f884563e557e1d18fbb5fd515386325b Mon Sep 17 00:00:00 2001
 From: Andrew den Exter <andrew.den.exter@jollamobile.com>
 Date: Fri, 16 Nov 2012 09:55:35 +1000
-Subject: [PATCH 11/11] Fix query syntax for PhotoAlbum children.
+Subject: [PATCH 10/18] Fix query syntax for PhotoAlbum children.
 
 The nie:isLogicalPartOf(?x) syntax won't match against an id, so this
 query would never return anything.  Instead return the contents
@@ -20,7 +20,7 @@ Reviewed-by: Christopher Adams <chris.adams@jollamobile.com>
  3 files changed, 40 insertions(+), 8 deletions(-)
 
 diff --git a/src/gallery/maemo6/qgallerytrackerchangenotifier.cpp b/src/gallery/maemo6/qgallerytrackerchangenotifier.cpp
-index ba30168..e769c94 100644
+index 75e086b..c34fa95 100644
 --- a/src/gallery/maemo6/qgallerytrackerchangenotifier.cpp
 +++ b/src/gallery/maemo6/qgallerytrackerchangenotifier.cpp
 @@ -74,7 +74,9 @@ void QGalleryTrackerChangeNotifier::graphUpdated(
@@ -35,7 +35,7 @@ index ba30168..e769c94 100644
      }
  }
 diff --git a/src/gallery/maemo6/qgallerytrackerschema.cpp b/src/gallery/maemo6/qgallerytrackerschema.cpp
-index d8c42bc..af7b266 100644
+index ab42968..d18b294 100644
 --- a/src/gallery/maemo6/qgallerytrackerschema.cpp
 +++ b/src/gallery/maemo6/qgallerytrackerschema.cpp
 @@ -1242,12 +1242,16 @@ QDocumentGallery::Error QGalleryTrackerSchema::buildFilterQuery(
@@ -61,7 +61,7 @@ index d8c42bc..af7b266 100644
                      result = QDocumentGallery::ItemIdError;
                  }
 diff --git a/tests/auto/qgallerytrackerschema_maemo6/tst_qgallerytrackerschema.cpp b/tests/auto/qgallerytrackerschema_maemo6/tst_qgallerytrackerschema.cpp
-index 29840e5..c4384f0 100644
+index 6da6286..3315a99 100644
 --- a/tests/auto/qgallerytrackerschema_maemo6/tst_qgallerytrackerschema.cpp
 +++ b/tests/auto/qgallerytrackerschema_maemo6/tst_qgallerytrackerschema.cpp
 @@ -1563,7 +1563,8 @@ void tst_QGalleryTrackerSchema::queryResponseRootItem_data()
@@ -109,5 +109,5 @@ index 29840e5..c4384f0 100644
                  "GROUP BY ?x";
  
 -- 
-1.7.10.4
+1.7.10.3
 

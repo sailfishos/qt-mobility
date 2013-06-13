@@ -1,0 +1,26 @@
+From 58780f54a87c4b68dbf1c24df8a586d6a20dfc0a Mon Sep 17 00:00:00 2001
+From: Juha Kallioinen <juha.kallioinen@jollamobile.com>
+Date: Thu, 13 Jun 2013 15:33:53 +0000
+Subject: [PATCH 18/18] Apply compiler flags set in CFLAGS and CXXFLAGS
+
+Signed-off-by: Juha Kallioinen <juha.kallioinen@jollamobile.com>
+---
+ configure |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure b/configure
+index 8b9d6f5..21fd52a 100755
+--- a/configure
++++ b/configure
+@@ -752,7 +752,7 @@ if [ "$shadowpath" != "$relpath" ]; then
+ fi
+ 
+ echo "Running $QMAKE_EXEC..."
+-if $QMAKE_EXEC -makefile $QMKSPEC -recursive "$relpath/qtmobility.pro"; then
++if $QMAKE_EXEC -makefile $QMKSPEC QMAKE_CXXFLAGS_RELEASE="$CXXFLAGS" QMAKE_CFLAGS_RELEASE="$CFLAGS" QMAKE_CFLAGS_DEBUG="$CFLAGS" QMAKE_CXXFLAGS_DEBUG="$CXXFLAGS" -recursive "$relpath/qtmobility.pro"; then
+     echo ""
+     echo "configure has finished. You may run make or gmake to build the project now."
+     echo ""
+-- 
+1.7.10.3
+

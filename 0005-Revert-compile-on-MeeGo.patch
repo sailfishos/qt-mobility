@@ -1,14 +1,14 @@
 From a2111b3a6e622fd22e8e24d008aa0a5596f6b025 Mon Sep 17 00:00:00 2001
 From: Robin Burchell <robin.burchell@collabora.com>
 Date: Wed, 21 Sep 2011 17:15:43 +0200
-Subject: [PATCH 5/8] Revert "compile on MeeGo"
+Subject: [PATCH 05/18] Revert "compile on MeeGo"
 
 This reverts commit ba9c12987e1294d66da1c992c1abb3f029108b19.
 
 MeeGo now has a mkcal from Harmattan again, so this patch isn't necessary.
 ---
  plugins/organizer/mkcal/mkcalengine.cpp |    4 ----
- 1 files changed, 0 insertions(+), 4 deletions(-)
+ 1 file changed, 4 deletions(-)
 
 diff --git a/plugins/organizer/mkcal/mkcalengine.cpp b/plugins/organizer/mkcal/mkcalengine.cpp
 index 8f446ba..71377fa 100644
@@ -27,5 +27,5 @@ index 8f446ba..71377fa 100644
          QOrganizerItem instance;
          //unfortunately sometimes expandRecurrences will include also those occurrences which are in exDates
 -- 
-1.7.7.5 (Apple Git-26)
+1.7.10.3
 

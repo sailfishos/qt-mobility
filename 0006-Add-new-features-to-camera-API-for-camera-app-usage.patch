@@ -1,7 +1,7 @@
 From f46ace3bcfbcbc5df030deec4931c886455df7b8 Mon Sep 17 00:00:00 2001
 From: Joonas Tanskanen <joonas.tanskanen@sasken.com>
 Date: Thu, 26 Jul 2012 14:17:13 +0200
-Subject: [PATCH 6/8] Add new features to camera API for camera app usage.
+Subject: [PATCH 06/18] Add new features to camera API for camera app usage.
 
 This patch adds new features to Camera API without any changes to
 public header files, thanks to using dynamic properties.
@@ -663,5 +663,5 @@ index 88b747a..c620821 100644
                          this, SIGNAL(imageExposed(int)));
                  connect(d->control, SIGNAL(imageCaptured(int,QImage)),
 -- 
-1.7.7.5 (Apple Git-26)
+1.7.10.3
 
