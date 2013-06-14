@@ -1,3 +1,7 @@
+* Fri Jun 14 2013 Juha Kallioinen <juha.kallioinen@jollamobile.com> - 1.2.0
+- Fix some rpmlint warnings
+- Add qt-mobility.rpmlintrc
+
 * Thu Jun 13 2013 Juha Kallioinen <juha.kallioinen@jollamobile.com> - 1.2.0
 - Applies the default CFLAGS/CXXFLAGS set by rpm for the build
 - Reformatted the patches from github

@@ -15,6 +15,7 @@ Group:      System/Libraries
 License:    LGPLv2.1 with exception or GPLv3
 URL:        http://qt.gitorious.org/qt-mobility
 Source0:    %{name}-v1.2.0-1962-g8c17475.tar.bz2
+Source1:    %{name}-rpmlintrc
 Source100:  qt-mobility.yaml
 Patch0:     0001-Enable-gstreamer-camerabin-backend.patch
 %ifarch %{arm}
@@ -82,7 +83,7 @@ using Qt Mobility libraries.
 %package -n libqtconnectivity1
 Summary:    Qt Mobility Connectivity module
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -96,7 +97,7 @@ local devices.
 %package -n libqtcontacts1
 Summary:    Qt Mobility Contacts module
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -110,7 +111,7 @@ local or remote backends.
 %package -n libqtfeedback1
 Summary:    Qt Mobility Feedback module
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -124,7 +125,7 @@ the vibration of the device or the piezo feedback from the screen.
 %package -n libqtgallery1
 Summary:    Qt Mobility Document Gallery module
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -138,7 +139,7 @@ and their meta-data.
 %package -n libqtlocation1
 Summary:    Qt Mobility Location module
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -152,7 +153,7 @@ and receiving location data using arbitrary data sources.
 %package -n libqtmessaging1
 Summary:    Qt Mobility Messaging module
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -166,7 +167,7 @@ SMS, MMS, MIME Email and TNEF Email messages.
 %package -n libqtmultimediakit1
 Summary:    Qt Mobility MultimediaKit module
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -180,7 +181,7 @@ collection of media content.
 %package -n libqtorganizer1
 Summary:    Qt Mobility Organizer module
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -196,7 +197,7 @@ locally or remotely.
 %package -n libqtpublishsubscribe1
 Summary:    Qt Mobility Publish and Subscribe module
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -211,7 +212,7 @@ change notifications.
 %package -n libqtsensors1
 Summary:    Qt Mobility Sensors module
 Group:      System/Libraries
-Requires:   libqtsql4-sqlite
+Requires:   %{name}-l10n
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -224,7 +225,7 @@ This package contains the Sensors API. It provides access to sensors.
 %package -n libqtserviceframework1
 Summary:    Qt Mobility Service Framework module
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -238,7 +239,7 @@ instantiate arbitrary services.
 %package -n libqtsysteminfo1
 Summary:    Qt Mobility System Information module
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -252,7 +253,7 @@ capabilities.
 %package -n libqtversit1
 Summary:    Qt Mobility Versit (vCard) module
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
@@ -279,7 +280,7 @@ vCards.
 %package -n libdeclarative-connectivity
 Summary:    Qt Mobility Connectivity QML plugin
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 
 %description -n libdeclarative-connectivity
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -290,7 +291,7 @@ This package contains the Connectivity QML plugin for QtDeclarative.
 %package -n libdeclarative-contacts
 Summary:    Qt Mobility Contacts QML plugin
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 
 %description -n libdeclarative-contacts
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -301,7 +302,7 @@ This package contains the Contacts QML plugin for QtDeclarative.
 %package -n libdeclarative-feedback
 Summary:    Qt Mobility Feedback QML plugin
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 
 %description -n libdeclarative-feedback
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -312,7 +313,7 @@ This package contains the Feedback QML plugin for QtDeclarative.
 %package -n libdeclarative-gallery
 Summary:    Qt Mobility Document Gallery QML plugin
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 
 %description -n libdeclarative-gallery
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -323,7 +324,7 @@ This package contains the Document Gallery QML plugin for QtDeclarative.
 %package -n libdeclarative-location
 Summary:    Qt Mobility Location QML plugin
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 
 %description -n libdeclarative-location
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -334,7 +335,7 @@ This package contains the Location QML plugin for QtDeclarative.
 %package -n libdeclarative-messaging
 Summary:    Qt Mobility Messaging QML plugin
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 
 %description -n libdeclarative-messaging
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -345,7 +346,7 @@ This package contains the Messaging QML plugin for QtDeclarative.
 %package -n libdeclarative-multimedia
 Summary:    Qt Mobility Multimedia QML plugin
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 
 %description -n libdeclarative-multimedia
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -356,7 +357,7 @@ This package contains the Multimedia QML plugin for QtDeclarative.
 %package -n libdeclarative-organizer
 Summary:    Qt Mobility Organizer QML plugin
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 
 %description -n libdeclarative-organizer
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -367,7 +368,7 @@ This package contains the Organizer QML plugin for QtDeclarative.
 %package -n libdeclarative-publishsubscribe
 Summary:    Qt Mobility Publish and Subscribe QML plugin
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 
 %description -n libdeclarative-publishsubscribe
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -378,7 +379,7 @@ This package contains the Publish and Subscribe QML plugin for QtDeclarative.
 %package -n libdeclarative-sensors
 Summary:    Qt Mobility Sensors Framework QML plugin
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 
 %description -n libdeclarative-sensors
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -389,7 +390,7 @@ This package contains the Sensors QML plugin for QtDeclarative.
 %package -n libdeclarative-serviceframework
 Summary:    Qt Mobility Service Framework QML plugin
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 
 %description -n libdeclarative-serviceframework
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -400,7 +401,7 @@ This package contains the Service Framework QML plugin for QtDeclarative.
 %package -n libdeclarative-systeminfo
 Summary:    Qt Mobility System Information QML plugin
 Group:      System/Libraries
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 
 %description -n libdeclarative-systeminfo
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -411,7 +412,7 @@ This package contains the System Information QML plugin for QtDeclarative.
 %package -n servicefw
 Summary:    Qt Mobility Service Framework tool
 Group:      Development/Tools
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 
 %description -n servicefw
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -449,7 +450,7 @@ Requires:   libdeclarative-publishsubscribe = %{version}-%{release}
 Requires:   libdeclarative-sensors = %{version}-%{release}
 Requires:   libdeclarative-serviceframework = %{version}-%{release}
 Requires:   libdeclarative-systeminfo = %{version}-%{release}
-Requires:   %{name}-l10n = %{version}-%{release}
+Requires:   %{name}-l10n
 
 %description examples
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -459,7 +460,7 @@ This package contains Qt Mobility examples.
 
 %package l10n
 Summary:    APIs for mobile device functionality - localization files
-Group:      System/I18n
+Group:      System/Packages
 
 %description l10n
 Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -530,9 +531,6 @@ export QMF_LIBDIR=%{_libdir}
 -demos \
 -modules "location contacts multimedia publishsubscribe versit messaging systeminfo serviceframework sensors gallery organizer feedback connectivity" \
 -meego \
-#%ifarch %{ix86}
-#-enable-libva
-#%endif
 
 make %{?_smp_mflags}
 # << build pre
@@ -1158,7 +1156,6 @@ find %{buildroot}%{_libdir}/qtmobility -type f -perm /u+x,g+x,o+x \( -false \
 # >> files libqtlocation1
 %{_libdir}/libQtLocation.so.*
 %{_libdir}/qt4/plugins/geoservices/libqtgeoservices_nokia.so
-# %{_libdir}/qt4/plugins/landmarks/libqtlandmarks_qsparql.so
 # << files libqtlocation1
 
 %files -n libqtmessaging1
@@ -1346,7 +1343,6 @@ find %{buildroot}%{_libdir}/qtmobility -type f -perm /u+x,g+x,o+x \( -false \
 %{_datadir}/qtmobility/translations/qtmobility_sk.qm
 %{_datadir}/qtmobility/translations/qtmobility_sl.qm
 %{_datadir}/qtmobility/translations/qtmobility_sv.qm
-#%{_datadir}/qtmobility/translations/qtmobility_uk.qm
 %{_datadir}/qtmobility/translations/qtmobility_zh_CN.qm
 %{_datadir}/qtmobility/translations/qtmobility_zh_TW.qm
 # << files l10n

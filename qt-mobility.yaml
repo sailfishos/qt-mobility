@@ -7,6 +7,7 @@ License: LGPLv2.1 with exception or GPLv3
 URL: http://qt.gitorious.org/qt-mobility
 Sources:
     - "%{name}-v1.2.0-1962-g8c17475.tar.bz2"
+    - "%{name}-rpmlintrc"
 Patches:
     - 0001-Enable-gstreamer-camerabin-backend.patch
     - arm:0002-Use-xvoverlay-rendering-instead-of-gles2-painting.patch
@@ -96,7 +97,7 @@ SubPackages:
             - libdeclarative-systeminfo = %{version}-%{release}
             - servicefw = %{version}-%{release}
             - examples = %{version}-%{release}
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
 
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
@@ -111,7 +112,7 @@ SubPackages:
       Summary: Qt Mobility Connectivity module
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -123,7 +124,7 @@ SubPackages:
       Summary: Qt Mobility Contacts module
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -135,7 +136,7 @@ SubPackages:
       Summary: Qt Mobility Feedback module
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -147,7 +148,7 @@ SubPackages:
       Summary: Qt Mobility Document Gallery module
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -159,7 +160,7 @@ SubPackages:
       Summary: Qt Mobility Location module
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -171,7 +172,7 @@ SubPackages:
       Summary: Qt Mobility Messaging module
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -183,7 +184,7 @@ SubPackages:
       Summary: Qt Mobility MultimediaKit module
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -195,7 +196,7 @@ SubPackages:
       Summary: Qt Mobility Organizer module
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -209,7 +210,7 @@ SubPackages:
       Summary: Qt Mobility Publish and Subscribe module
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -222,20 +223,18 @@ SubPackages:
       Summary: Qt Mobility Sensors module
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
           This package contains the Sensors API. It provides access to sensors.
-      Requires:
-          - libqtsql4-sqlite
 
     - Name: libqtserviceframework1
       AsWholeName: yes
       Summary: Qt Mobility Service Framework module
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -247,7 +246,7 @@ SubPackages:
       Summary: Qt Mobility System Information module
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -259,7 +258,7 @@ SubPackages:
       Summary: Qt Mobility Versit (vCard) module
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -281,7 +280,7 @@ SubPackages:
       Summary: Qt Mobility Connectivity QML plugin
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -292,7 +291,7 @@ SubPackages:
       Summary: Qt Mobility Contacts QML plugin
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -303,7 +302,7 @@ SubPackages:
       Summary: Qt Mobility Feedback QML plugin
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -314,7 +313,7 @@ SubPackages:
       Summary: Qt Mobility Document Gallery QML plugin
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -325,7 +324,7 @@ SubPackages:
       Summary: Qt Mobility Location QML plugin
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -336,7 +335,7 @@ SubPackages:
       Summary: Qt Mobility Messaging QML plugin
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -347,7 +346,7 @@ SubPackages:
       Summary: Qt Mobility Multimedia QML plugin
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -358,7 +357,7 @@ SubPackages:
       Summary: Qt Mobility Organizer QML plugin
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -369,7 +368,7 @@ SubPackages:
       Summary: Qt Mobility Publish and Subscribe QML plugin
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -380,7 +379,7 @@ SubPackages:
       Summary: Qt Mobility Sensors Framework QML plugin
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -391,7 +390,7 @@ SubPackages:
       Summary: Qt Mobility Service Framework QML plugin
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -402,7 +401,7 @@ SubPackages:
       Summary: Qt Mobility System Information QML plugin
       Group: System/Libraries
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -413,7 +412,7 @@ SubPackages:
       Summary: Qt Mobility Service Framework tool
       Group: Development/Tools
       Requires:
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -450,7 +449,7 @@ SubPackages:
             - libdeclarative-sensors = %{version}-%{release}
             - libdeclarative-serviceframework = %{version}-%{release}
             - libdeclarative-systeminfo = %{version}-%{release}
-            - "%{name}-l10n = %{version}-%{release}"
+            - "%{name}-l10n"
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 
@@ -458,7 +457,7 @@ SubPackages:
 
     - Name: l10n
       Summary: APIs for mobile device functionality - localization files
-      Group: System/I18n
+      Group: System/Packages
       Description: |
           Qt Mobility delivers a set of new APIs for mobile device functionality.
 

@@ -1,0 +1,3 @@
+addFilter("W: strange-permission")
+addFilter("W: shlib-policy-missing-lib")
+addFilter("W: no-changelogname-tag")
