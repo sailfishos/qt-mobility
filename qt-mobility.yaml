@@ -104,8 +104,6 @@ SubPackages:
 
           This package contains the development files needed to build Qt applications
           using Qt Mobility libraries.
-      Requires:
-          - servicefw
 
     - Name: libqtconnectivity1
       AsWholeName: yes
