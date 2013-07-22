@@ -98,7 +98,6 @@ Requires:   libdeclarative-sensors = %{version}-%{release}
 Requires:   libdeclarative-serviceframework = %{version}-%{release}
 Requires:   libdeclarative-systeminfo = %{version}-%{release}
 Requires:   servicefw = %{version}-%{release}
-Requires:   examples = %{version}-%{release}
 Requires:   %{name}-l10n
 
 %description devel

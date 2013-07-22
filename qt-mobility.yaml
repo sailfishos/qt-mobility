@@ -96,7 +96,6 @@ SubPackages:
             - libdeclarative-serviceframework = %{version}-%{release}
             - libdeclarative-systeminfo = %{version}-%{release}
             - servicefw = %{version}-%{release}
-            - examples = %{version}-%{release}
             - "%{name}-l10n"
 
       Description: |
