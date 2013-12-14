@@ -27,6 +27,7 @@ Patches:
     - 0016-Allow-camera-use-if-resource-manager-is-not-availabl.patch
     - 0017-Allow-overriding-default-QContactManagerEngine-via-e.patch
     - 0018-Apply-compiler-flags-set-in-CFLAGS-and-CXXFLAGS.patch
+    - gcc47_fix_unistd.patch
 Description: |
     Qt Mobility delivers a set of new APIs for mobile device functionality. These
     APIs allow the developer to use these features with ease from one framework and

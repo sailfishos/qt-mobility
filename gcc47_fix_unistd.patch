@@ -1,0 +1,89 @@
+diff -Naur a/qt-mobility/plugins/multimedia/pulseaudio/qaudioinput_pulse.cpp b/qt-mobility/plugins/multimedia/pulseaudio/qaudioinput_pulse.cpp
+--- a/qt-mobility/plugins/multimedia/pulseaudio/qaudioinput_pulse.cpp	2012-07-20 03:36:23.000000000 +0200
++++ b/qt-mobility/plugins/multimedia/pulseaudio/qaudioinput_pulse.cpp	2013-12-14 17:14:12.382186329 +0100
+@@ -39,6 +39,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <unistd.h>
+ #include <QtCore/qcoreapplication.h>
+ #include <QtCore/qdebug.h>
+ 
+diff -Naur a/qt-mobility/plugins/multimedia/pulseaudio/qaudiooutput_pulse.cpp b/qt-mobility/plugins/multimedia/pulseaudio/qaudiooutput_pulse.cpp
+--- a/qt-mobility/plugins/multimedia/pulseaudio/qaudiooutput_pulse.cpp	2012-07-20 03:36:23.000000000 +0200
++++ b/qt-mobility/plugins/multimedia/pulseaudio/qaudiooutput_pulse.cpp	2013-12-14 17:08:48.340579489 +0100
+@@ -39,6 +39,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <unistd.h>
+ #include <QtCore/qcoreapplication.h>
+ #include <QtCore/qdebug.h>
+ 
+diff -Naur a/qt-mobility/plugins/multimedia/pulseaudio/qpulseaudioengine.cpp b/qt-mobility/plugins/multimedia/pulseaudio/qpulseaudioengine.cpp
+--- a/qt-mobility/plugins/multimedia/pulseaudio/qpulseaudioengine.cpp	2012-07-20 03:36:23.000000000 +0200
++++ b/qt-mobility/plugins/multimedia/pulseaudio/qpulseaudioengine.cpp	2013-12-14 17:15:04.702445772 +0100
+@@ -39,6 +39,7 @@
+ **
+ ****************************************************************************/
+ 
++#include <unistd.h>
+ #include <QtCore/qdebug.h>
+ 
+ #include <qaudiodeviceinfo.h>
+diff -Naur a/qt-mobility/src/location/dbuscomm_maemo.cpp b/qt-mobility/src/location/dbuscomm_maemo.cpp
+--- a/qt-mobility/src/location/dbuscomm_maemo.cpp	2012-07-20 03:36:23.000000000 +0200
++++ b/qt-mobility/src/location/dbuscomm_maemo.cpp	2013-12-14 16:53:22.819990089 +0100
+@@ -42,6 +42,7 @@
+ #include "dbuscomm_maemo_p.h"
+ 
+ #include <iostream>
++#include <unistd.h>
+ using namespace std;
+ 
+ QTM_BEGIN_NAMESPACE
+diff -Naur a/qt-mobility/src/multimedia/audio/qaudioinput_alsa_p.cpp b/qt-mobility/src/multimedia/audio/qaudioinput_alsa_p.cpp
+--- a/qt-mobility/src/multimedia/audio/qaudioinput_alsa_p.cpp	2012-07-20 03:36:23.000000000 +0200
++++ b/qt-mobility/src/multimedia/audio/qaudioinput_alsa_p.cpp	2013-12-14 16:54:11.156229771 +0100
+@@ -50,6 +50,7 @@
+ // INTERNAL USE ONLY: Do NOT use for any other purpose.
+ //
+ 
++#include <unistd.h>
+ #include <QtCore/qcoreapplication.h>
+ #include "qaudioinput_alsa_p.h"
+ #include "qaudiodeviceinfo_alsa_p.h"
+diff -Naur a/qt-mobility/src/multimedia/audio/qaudiooutput_alsa_p.cpp b/qt-mobility/src/multimedia/audio/qaudiooutput_alsa_p.cpp
+--- a/qt-mobility/src/multimedia/audio/qaudiooutput_alsa_p.cpp	2012-07-20 03:36:23.000000000 +0200
++++ b/qt-mobility/src/multimedia/audio/qaudiooutput_alsa_p.cpp	2013-12-14 16:53:55.884154044 +0100
+@@ -50,6 +50,7 @@
+ // INTERNAL USE ONLY: Do NOT use for any other purpose.
+ //
+ 
++#include <unistd.h>
+ #include <QtCore/qcoreapplication.h>
+ #include "qaudiooutput_alsa_p.h"
+ #include "qaudiodeviceinfo_alsa_p.h"
+diff -Naur a/qt-mobility/src/systeminfo/linux/qsysteminfo_linux.cpp b/qt-mobility/src/systeminfo/linux/qsysteminfo_linux.cpp
+--- a/qt-mobility/src/systeminfo/linux/qsysteminfo_linux.cpp	2012-07-20 03:36:23.000000000 +0200
++++ b/qt-mobility/src/systeminfo/linux/qsysteminfo_linux.cpp	2013-12-14 17:05:00.731450841 +0100
+@@ -43,6 +43,7 @@
+ 
+ #include "qsysteminfo_dbus_p.h"
+ 
++#include <unistd.h>
+ #if !defined(Q_WS_MAEMO_6)
+ #if defined(Q_WS_X11)
+ #include <QX11Info>
+diff -Naur a/qt-mobility/tests/auto/qsystemreadwritelock/tst_qsystemreadwritelock.cpp b/qt-mobility/tests/auto/qsystemreadwritelock/tst_qsystemreadwritelock.cpp
+--- a/qt-mobility/tests/auto/qsystemreadwritelock/tst_qsystemreadwritelock.cpp	2012-07-20 03:36:23.000000000 +0200
++++ b/qt-mobility/tests/auto/qsystemreadwritelock/tst_qsystemreadwritelock.cpp	2013-12-14 16:52:38.483770244 +0100
+@@ -41,6 +41,8 @@
+ 
+ //TESTED_COMPONENT=src/publishsubscribe
+ 
++#include <unistd.h>
++
+ #include <QtTest/QtTest>
+ #include "qsystemreadwritelock_p.h"
+ #include <QThread>

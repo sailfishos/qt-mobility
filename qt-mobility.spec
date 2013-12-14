@@ -37,6 +37,7 @@ Patch14:     0015-Allow-playback-if-resource-manager-is-not-available.patch
 Patch15:     0016-Allow-camera-use-if-resource-manager-is-not-availabl.patch
 Patch16:     0017-Allow-overriding-default-QContactManagerEngine-via-e.patch
 Patch17:     0018-Apply-compiler-flags-set-in-CFLAGS-and-CXXFLAGS.patch
+Patch18:     gcc47_fix_unistd.patch
 BuildRequires:  pkgconfig(QtGui)
 BuildRequires:  pkgconfig(QtOpenGL)
 BuildRequires:  pkgconfig(alsa)
@@ -536,6 +537,8 @@ This package contains Qt Mobility translations.
 %patch16 -p1
 # 0018-Apply-compiler-flags-set-in-CFLAGS-and-CXXFLAGS.patch
 %patch17 -p1
+# gcc47_fix_unistd.patch
+%patch18 -p2
 # >> setup
 # << setup
 
