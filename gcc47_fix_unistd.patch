@@ -31,6 +31,17 @@ diff -Naur a/qt-mobility/plugins/multimedia/pulseaudio/qpulseaudioengine.cpp b/q
  #include <QtCore/qdebug.h>
  
  #include <qaudiodeviceinfo.h>
+diff -Naur a/qt-mobility/src/connectivity/nfc/qllcpsocket_maemo6_p.cpp b/qt-mobility/src/connectivity/nfc/qllcpsocket_maemo6_p.cpp
+--- a/qt-mobility/src/connectivity/nfc/qllcpsocket_maemo6_p.cpp	2012-07-20 03:36:23.000000000 +0200
++++ b/qt-mobility/src/connectivity/nfc/qllcpsocket_maemo6_p.cpp	2013-12-15 02:40:09.248672800 +0100
+@@ -48,6 +48,7 @@
+ #include <QtCore/QSocketNotifier>
+ #include <QtCore/QAtomicInt>
+ 
++#include <unistd.h>
+ #include <errno.h>
+ #include <signal.h>
+ 
 diff -Naur a/qt-mobility/src/location/dbuscomm_maemo.cpp b/qt-mobility/src/location/dbuscomm_maemo.cpp
 --- a/qt-mobility/src/location/dbuscomm_maemo.cpp	2012-07-20 03:36:23.000000000 +0200
 +++ b/qt-mobility/src/location/dbuscomm_maemo.cpp	2013-12-14 16:53:22.819990089 +0100
@@ -42,6 +53,17 @@ diff -Naur a/qt-mobility/src/location/dbuscomm_maemo.cpp b/qt-mobility/src/locat
  using namespace std;
  
  QTM_BEGIN_NAMESPACE
+diff -Naur a/qt-mobility/src/messaging/modestengine_maemo.cpp b/qt-mobility/src/messaging/modestengine_maemo.cpp
+--- a/qt-mobility/src/messaging/modestengine_maemo.cpp	2012-07-20 03:36:23.000000000 +0200
++++ b/qt-mobility/src/messaging/modestengine_maemo.cpp	2013-12-15 02:43:43.277734119 +0100
+@@ -61,6 +61,7 @@
+ #include </usr/include/sys/inotify.h>
+ #include </usr/include/sys/ioctl.h>
+ #include </usr/include/sys/fcntl.h>
++#include <unistd.h>
+ 
+ // Marshall the ModestStringMap data into a D-Bus argument
+ QDBusArgument &operator<<(QDBusArgument &argument,
 diff -Naur a/qt-mobility/src/multimedia/audio/qaudioinput_alsa_p.cpp b/qt-mobility/src/multimedia/audio/qaudioinput_alsa_p.cpp
 --- a/qt-mobility/src/multimedia/audio/qaudioinput_alsa_p.cpp	2012-07-20 03:36:23.000000000 +0200
 +++ b/qt-mobility/src/multimedia/audio/qaudioinput_alsa_p.cpp	2013-12-14 16:54:11.156229771 +0100
@@ -75,6 +97,17 @@ diff -Naur a/qt-mobility/src/systeminfo/linux/qsysteminfo_linux.cpp b/qt-mobilit
  #if !defined(Q_WS_MAEMO_6)
  #if defined(Q_WS_X11)
  #include <QX11Info>
+diff -Naur a/qt-mobility/src/systeminfo/qsysteminfo_maemo.cpp b/qt-mobility/src/systeminfo/qsysteminfo_maemo.cpp
+--- a/qt-mobility/src/systeminfo/qsysteminfo_maemo.cpp	2012-07-20 03:36:23.000000000 +0200
++++ b/qt-mobility/src/systeminfo/qsysteminfo_maemo.cpp	2013-12-15 02:42:11.917281079 +0100
+@@ -45,6 +45,7 @@
+ #include <QTextStream>
+ #include <QtGui/qdesktopwidget.h>
+ 
++#include <unistd.h>
+ #include <fcntl.h>
+ #include <sys/ioctl.h>
+ #include <linux/input.h>
 diff -Naur a/qt-mobility/tests/auto/qsystemreadwritelock/tst_qsystemreadwritelock.cpp b/qt-mobility/tests/auto/qsystemreadwritelock/tst_qsystemreadwritelock.cpp
 --- a/qt-mobility/tests/auto/qsystemreadwritelock/tst_qsystemreadwritelock.cpp	2012-07-20 03:36:23.000000000 +0200
 +++ b/qt-mobility/tests/auto/qsystemreadwritelock/tst_qsystemreadwritelock.cpp	2013-12-14 16:52:38.483770244 +0100
